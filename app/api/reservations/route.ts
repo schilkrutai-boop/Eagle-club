@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { addReservation, getDB, uid } from "@/lib/db";
+import { AppError, createReservation } from "@/lib/db";
 import { isRealDate, todayISO } from "@/lib/format";
 import { CLOSE_HOUR, MAX_DONATION, OPEN_HOUR } from "@/lib/types";
 
@@ -21,8 +21,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Datos de reserva incompletos." }, { status: 400 });
   }
 
-  // No se puede reservar un bloque ya pasado (fecha anterior a hoy, o una
-  // hora de hoy que ya empezó).
   const today = todayISO();
   if (date < today || (date === today && hour <= new Date().getHours())) {
     return NextResponse.json(
@@ -31,35 +29,22 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const db = getDB();
-  if (!db.bays.some((b) => b.id === bayId)) {
-    return NextResponse.json({ error: "La bahía no existe." }, { status: 400 });
+  try {
+    const reservation = await createReservation({
+      bayId,
+      date,
+      hour,
+      name: String(name).slice(0, 80),
+      email: String(email ?? "").slice(0, 120),
+      guests: Math.min(Math.max(Math.floor(Number(guests)) || 1, 1), 6),
+      donation: Math.min(Math.max(Math.round(Number(donation) || 0), 0), MAX_DONATION),
+    });
+    return NextResponse.json({ reservation });
+  } catch (err) {
+    if (err instanceof AppError) {
+      return NextResponse.json({ error: err.message }, { status: err.status });
+    }
+    console.error("POST /api/reservations", err);
+    return NextResponse.json({ error: "No pudimos crear la reserva." }, { status: 500 });
   }
-
-  const taken = db.reservations.some(
-    (r) => r.bayId === bayId && r.date === date && r.hour === hour
-  );
-  if (taken) {
-    return NextResponse.json(
-      { error: "Ese horario acaba de ser reservado. Elige otro bloque." },
-      { status: 409 }
-    );
-  }
-
-  const reservation = {
-    id: uid(),
-    bayId,
-    date,
-    hour,
-    name: String(name).slice(0, 80),
-    email: String(email ?? "").slice(0, 120),
-    guests: Math.min(Math.max(Math.floor(Number(guests)) || 1, 1), 6),
-    total: db.settings.bayPrice,
-    donation: Math.min(Math.max(Math.round(Number(donation) || 0), 0), MAX_DONATION),
-    paid: true, // pago simulado en el MVP
-    createdAt: Date.now(),
-  };
-
-  addReservation(reservation);
-  return NextResponse.json({ reservation });
 }

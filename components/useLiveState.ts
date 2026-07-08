@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { REALTIME_CHANNEL, supabaseBrowser } from "@/lib/supabase";
 import type { Bay, EmailLog, MenuItem, Order, Reservation, Settings } from "@/lib/types";
 
 export type LiveState = {
@@ -13,8 +14,9 @@ export type LiveState = {
 };
 
 /**
- * Fetches /api/state and re-fetches whenever the server broadcasts a change
- * over SSE, so every screen (bahía, cocina, admin) stays in sync in real time.
+ * Carga /api/state y lo vuelve a pedir cada vez que el servidor emite un
+ * cambio por Supabase Realtime (broadcast), para que todas las pantallas
+ * (bahía, cocina, admin) queden sincronizadas en tiempo real.
  */
 export function useLiveState(params?: { date?: string; bay?: number }) {
   const [state, setState] = useState<LiveState | null>(null);
@@ -23,8 +25,8 @@ export function useLiveState(params?: { date?: string; bay?: number }) {
   useEffect(() => {
     paramsRef.current = params;
   });
-  // Contador de secuencia: solo el fetch más reciente puede escribir el
-  // estado, así una respuesta lenta y vieja nunca pisa a una más nueva.
+  // Solo el fetch más reciente puede escribir el estado: una respuesta lenta
+  // y vieja nunca pisa a una más nueva.
   const seqRef = useRef(0);
 
   const refresh = useCallback(async () => {
@@ -42,23 +44,26 @@ export function useLiveState(params?: { date?: string; bay?: number }) {
   }, [refresh, params?.date, params?.bay]);
 
   useEffect(() => {
-    const es = new EventSource("/api/events");
-    es.onopen = () => {
-      setConnected(true);
-      // Reconexión: resincroniza el estado completo, porque los eventos
-      // emitidos mientras estuvo caído no se reenvían.
-      refresh();
+    const sb = supabaseBrowser();
+    if (!sb) {
+      setConnected(false);
+      return;
+    }
+    const channel = sb
+      .channel(REALTIME_CHANNEL)
+      .on("broadcast", { event: "change" }, () => refresh())
+      .subscribe((status) => {
+        if (status === "SUBSCRIBED") {
+          setConnected(true);
+          // (Re)conexión: resincroniza el estado completo.
+          refresh();
+        } else {
+          setConnected(false);
+        }
+      });
+    return () => {
+      sb.removeChannel(channel);
     };
-    es.onerror = () => setConnected(false);
-    es.onmessage = (msg) => {
-      try {
-        const { event } = JSON.parse(msg.data);
-        if (event !== "ping" && event !== "connected") refresh();
-      } catch {
-        // ignore malformed events
-      }
-    };
-    return () => es.close();
   }, [refresh]);
 
   return { state, refresh, connected };

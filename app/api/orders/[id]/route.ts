@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { broadcast, getDB, persist } from "@/lib/db";
+import { AppError, setOrderStatus } from "@/lib/db";
 import type { OrderStatus } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -17,13 +17,14 @@ export async function PATCH(
     return NextResponse.json({ error: "Estado inválido." }, { status: 400 });
   }
 
-  const order = getDB().orders.find((o) => o.id === id);
-  if (!order) {
-    return NextResponse.json({ error: "Pedido no encontrado." }, { status: 404 });
+  try {
+    const order = await setOrderStatus(id, status);
+    return NextResponse.json({ order });
+  } catch (err) {
+    if (err instanceof AppError) {
+      return NextResponse.json({ error: err.message }, { status: err.status });
+    }
+    console.error("PATCH /api/orders/[id]", err);
+    return NextResponse.json({ error: "No pudimos actualizar el pedido." }, { status: 500 });
   }
-
-  order.status = status;
-  persist();
-  broadcast("orders");
-  return NextResponse.json({ order });
 }
