@@ -1,26 +1,474 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Identidad Eagle Club: burdeos profundo, carmesí y crema */
+  --wine: #4b211e;
+  --wine-2: #5a2823;
+  --wine-3: #6b2f29;
+  --crimson: #c23b43;
+  --crimson-dark: #a02c33;
+  --stripe-dark: #8c2228;
+  --cream: #f7f2ea;
+  --card: #fffdf8;
+  --ink: #271b16;
+  --mid: #70625a;
+  --faint: #786a5d;
+  --line: #e7ddd0;
+  --line-strong: #d3c5b4;
+  --gold: #c9a35c;
+  --ok: #3e7d4e;
+  --alert: #a02c33;
+  --kds-dark: #2a1210;
+  --on-wine: #f6efe6;
+  --on-wine-dim: rgba(246, 239, 230, 0.65);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-body), "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.55;
+}
+
+.wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-left: clamp(16px, 4vw, 32px);
+  padding-right: clamp(16px, 4vw, 32px);
+}
+
+/* ---------- type ---------- */
+.display {
+  font-family: var(--font-display), Georgia, serif;
+  text-transform: uppercase;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  line-height: 1.05;
+}
+
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--faint);
+}
+
+.mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- brand stripe (firma de la tarjeta) ---------- */
+.brand-stripe {
+  height: 8px;
+  background: var(--crimson);
+  border-bottom: 5px solid var(--stripe-dark);
+}
+
+/* ---------- topbar ---------- */
+.topbar {
+  background: var(--wine);
+  color: var(--on-wine);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.topbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 60px;
+}
+
+.wordmark {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+  min-width: 0;
+}
+
+.wordmark .mark {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: 18px;
+  letter-spacing: 0.22em;
+  color: var(--on-wine);
+  white-space: nowrap;
+}
+
+.wordmark .sub {
+  font-size: 8.5px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--on-wine-dim);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.topnav {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.topnav a {
+  color: var(--on-wine-dim);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+.topnav a:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.topnav a.active {
+  color: var(--wine);
+  background: var(--on-wine);
+}
+
+/* ---------- buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.05s ease;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--crimson);
+  outline-offset: 2px;
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn--primary {
+  background: var(--crimson);
+  color: #fff;
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: var(--crimson-dark);
+}
+
+.btn--dark {
+  background: var(--wine);
+  color: var(--on-wine);
+}
+
+.btn--dark:hover:not(:disabled) {
+  background: var(--wine-3);
+}
+
+.btn--outline {
+  background: transparent;
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+.btn--outline:hover:not(:disabled) {
+  border-color: var(--ink);
+}
+
+.btn--outline-light {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.35);
+  color: var(--on-wine);
+}
+
+.btn--outline-light:hover:not(:disabled) {
+  border-color: var(--on-wine);
+}
+
+.btn--lg {
+  padding: 14px 26px;
+  font-size: 15px;
+}
+
+.btn--sm {
+  padding: 6px 12px;
+  font-size: 12.5px;
+  border-radius: 5px;
+}
+
+/* ---------- cards & chips ---------- */
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mid);
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 9px;
+  white-space: nowrap;
+}
+
+.badge-sold {
+  display: inline-flex;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--alert);
+  border-radius: 4px;
+  padding: 3px 8px;
+}
+
+/* ---------- tee sheet ---------- */
+.slot {
+  font-family: var(--font-mono), monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--ink);
+  padding: 10px 0;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.12s ease, background 0.12s ease;
+}
+
+.slot:hover:not(:disabled) {
+  border-color: var(--crimson);
+  background: #faf0ec;
+}
+
+.slot:focus-visible {
+  outline: 2px solid var(--crimson);
+  outline-offset: 1px;
+}
+
+.slot--taken {
+  background: repeating-linear-gradient(
+    -45deg,
+    #efe8dd,
+    #efe8dd 4px,
+    #e6ded1 4px,
+    #e6ded1 8px
+  );
+  color: var(--faint);
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+.slot--selected,
+.slot--selected:hover:not(:disabled) {
+  background: var(--wine);
+  border-color: var(--wine);
+  color: #fff;
+}
+
+/* ---------- fields ---------- */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--mid);
+}
+
+.field input,
+.field select,
+.field textarea {
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  background: #fff;
+  padding: 10px 12px;
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--ink);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: 2px solid var(--crimson);
+  outline-offset: -1px;
+  border-color: var(--crimson);
+}
+
+/* ---------- overlay panel ---------- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 10, 8, 0.6);
+  z-index: 50;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0;
+}
+
+@media (min-width: 640px) {
+  .overlay {
+    align-items: center;
+    padding: 24px;
+  }
+}
+
+.panel {
+  background: var(--card);
+  width: 100%;
+  max-width: 460px;
+  max-height: 92dvh;
+  overflow-y: auto;
+  border-radius: 16px 16px 0 0;
+  padding: 26px;
+}
+
+@media (min-width: 640px) {
+  .panel {
+    border-radius: 12px;
+  }
+}
+
+/* ---------- KDS (dark) ---------- */
+.kds-body {
+  background: var(--kds-dark);
+  min-height: 100dvh;
+  color: #f0e6dd;
+}
+
+/* Sobre el burdeos oscuro del KDS, un anillo carmesí casi no se ve: usa oro. */
+.kds-body .btn:focus-visible,
+.kds-body .slot:focus-visible {
+  outline-color: var(--gold);
+}
+
+.ticket {
+  background: #401b17;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.ticket--nuevo {
+  border-color: var(--gold);
+  animation: pulseNew 2s ease-in-out infinite;
+}
+
+/* ---------- misc ---------- */
+.hairline {
+  border: none;
+  border-top: 1px solid var(--line);
+}
+
+.fade-in {
+  animation: fadeIn 0.25s ease both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pulseNew {
+  0%,
+  100% {
+    box-shadow: 0 0 0 1px var(--gold);
+  }
+  50% {
+    box-shadow: 0 0 0 3px rgba(201, 163, 92, 0.55);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .fade-in,
+  .ticket--nuevo {
+    animation: none;
+  }
+}
+
+/* ---------- impresión de QRs ---------- */
+@media print {
+  .topbar,
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+  }
+  .qr-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  .qr-card {
+    break-inside: avoid;
+    border: 1px solid #cbb8a6;
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .qr-card img {
+    width: 100% !important;
+    max-width: 320px !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
 }
