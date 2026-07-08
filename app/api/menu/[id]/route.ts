@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AppError, updateMenuItem } from "@/lib/db";
+import { isAdmin } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -7,6 +8,9 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  if (!isAdmin(req)) {
+    return NextResponse.json({ error: "No autorizado." }, { status: 401 });
+  }
   const { id } = await params;
   const body = await req.json();
 

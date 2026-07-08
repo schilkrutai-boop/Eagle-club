@@ -23,6 +23,10 @@ const STATUS_STEP: Record<OrderStatus, number> = {
   entregado: 4,
 };
 
+// Máximo por producto en un pedido (alineado con la validación del servidor).
+const MAX_PER_ITEM = 20;
+const cap = (item: MenuItem) => Math.min(item.stock, MAX_PER_ITEM);
+
 type Cart = Record<string, number>;
 
 export default function BayPage({ params }: { params: Promise<{ id: string }> }) {
@@ -51,7 +55,7 @@ export default function BayPage({ params }: { params: Promise<{ id: string }> })
       const next: Cart = {};
       for (const [itemId, qty] of Object.entries(c)) {
         const item = menu.find((m) => m.id === itemId);
-        const max = item && item.available ? item.stock : 0;
+        const max = item && item.available ? cap(item) : 0;
         const clamped = Math.min(qty, max);
         if (clamped !== qty) changed = true;
         if (clamped > 0) next[itemId] = clamped;
@@ -82,7 +86,7 @@ export default function BayPage({ params }: { params: Promise<{ id: string }> })
   const add = (item: MenuItem) =>
     setCart((c) => ({
       ...c,
-      [item.id]: Math.min((c[item.id] ?? 0) + 1, item.stock),
+      [item.id]: Math.min((c[item.id] ?? 0) + 1, cap(item)),
     }));
   const remove = (id: string) =>
     setCart((c) => ({ ...c, [id]: Math.max((c[id] ?? 0) - 1, 0) }));
@@ -172,7 +176,7 @@ export default function BayPage({ params }: { params: Promise<{ id: string }> })
             .map((m) => {
               const soldOut = !m.available || m.stock <= 0;
               const inCart = cart[m.id] ?? 0;
-              const maxed = inCart >= m.stock;
+              const maxed = inCart >= cap(m);
               return (
                 <article
                   key={m.id}
@@ -415,7 +419,7 @@ function CartPanel({
               <button
                 className="btn btn--outline btn--sm mono"
                 onClick={() => onAdd(item)}
-                disabled={qty >= item.stock}
+                disabled={qty >= cap(item)}
                 aria-label={`Agregar ${item.name}`}
               >
                 +

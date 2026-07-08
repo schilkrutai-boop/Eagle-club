@@ -44,3 +44,4 @@ next-env.d.ts
 /data/
 !.env.example
 _smoke.mjs
+_reset.mjs

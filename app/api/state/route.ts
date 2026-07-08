@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getState } from "@/lib/db";
+import { isAdmin } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -9,7 +10,7 @@ export async function GET(req: NextRequest) {
   const bayId = bayParam ? Number(bayParam) : undefined;
 
   try {
-    const state = await getState({ date, bayId });
+    const state = await getState({ date, bayId, includePII: isAdmin(req) });
     return NextResponse.json(state);
   } catch (err) {
     console.error("GET /api/state", err);

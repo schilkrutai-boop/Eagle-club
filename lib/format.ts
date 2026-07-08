@@ -37,3 +37,47 @@ export function isRealDate(iso: string): boolean {
   const d = new Date(iso + "T00:00:00");
   return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === iso;
 }
+
+const CLUB_TZ = "America/Santiago";
+
+function santiagoParts(at = new Date()) {
+  const p = new Intl.DateTimeFormat("en-US", {
+    timeZone: CLUB_TZ,
+    hourCycle: "h23",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  })
+    .formatToParts(at)
+    .reduce<Record<string, string>>((a, x) => {
+      a[x.type] = x.value;
+      return a;
+    }, {});
+  return p;
+}
+
+/** Fecha (YYYY-MM-DD) y hora actual en la zona horaria del club (Chile). */
+export function santiagoNow(): { date: string; hour: number } {
+  const p = santiagoParts();
+  return { date: `${p.year}-${p.month}-${p.day}`, hour: Number(p.hour) % 24 };
+}
+
+/** Instante UTC (ISO) de la medianoche de hoy en Chile — corte de "hoy". */
+export function santiagoDayStartISO(): string {
+  const now = new Date();
+  const p = santiagoParts(now);
+  const asIfUTC = Date.UTC(
+    Number(p.year),
+    Number(p.month) - 1,
+    Number(p.day),
+    Number(p.hour),
+    Number(p.minute),
+    Number(p.second)
+  );
+  const offsetMs = asIfUTC - now.getTime();
+  const midnightAsIfUTC = Date.UTC(Number(p.year), Number(p.month) - 1, Number(p.day), 0, 0, 0);
+  return new Date(midnightAsIfUTC - offsetMs).toISOString();
+}

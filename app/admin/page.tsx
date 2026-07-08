@@ -9,6 +9,15 @@ import type { EmailLog, MenuItem, Settings } from "@/lib/types";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/** Headers con el token de admin para las mutaciones protegidas. */
+function adminHeaders(): Record<string, string> {
+  const token = typeof window !== "undefined" ? localStorage.getItem("eagle_admin") : null;
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { "x-admin-token": token } : {}),
+  };
+}
+
 type Tab = "resumen" | "reservas" | "menu" | "config" | "qr";
 
 const TABS: [Tab, string][] = [
@@ -20,6 +29,95 @@ const TABS: [Tab, string][] = [
 ];
 
 export default function AdminPage() {
+  // "checking" hasta validar el token guardado; "locked" pide token; "ok" entra.
+  const [gate, setGate] = useState<"checking" | "locked" | "ok">("checking");
+  const [token, setToken] = useState("");
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const check = useMemo(
+    () => async (t: string) => {
+      const res = await fetch("/api/admin/check", { headers: { "x-admin-token": t } });
+      return res.ok;
+    },
+    []
+  );
+
+  useEffect(() => {
+    const saved = localStorage.getItem("eagle_admin");
+    if (!saved) {
+      setGate("locked");
+      return;
+    }
+    check(saved).then((ok) => {
+      if (ok) setGate("ok");
+      else {
+        localStorage.removeItem("eagle_admin");
+        setGate("locked");
+      }
+    });
+  }, [check]);
+
+  async function unlock(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    setError("");
+    const ok = await check(token.trim());
+    setBusy(false);
+    if (ok) {
+      localStorage.setItem("eagle_admin", token.trim());
+      setToken("");
+      setGate("ok");
+    } else {
+      setError("Token incorrecto.");
+    }
+  }
+
+  if (gate !== "ok") {
+    return (
+      <>
+        <TopBar />
+        <main className="wrap flex min-h-[60vh] items-center justify-center py-10">
+          {gate === "checking" ? (
+            <p className="eyebrow">Verificando…</p>
+          ) : (
+            <form onSubmit={unlock} className="card w-full max-w-[380px] p-7">
+              <p className="eyebrow">Administración</p>
+              <h1 className="display mt-2 text-2xl">Acceso del equipo</h1>
+              <p className="mt-2 text-sm" style={{ color: "var(--mid)" }}>
+                Ingresa el token de administración para ver reservas, ventas e
+                inventario.
+              </p>
+              <div className="field mt-5">
+                <label htmlFor="admtoken">Token</label>
+                <input
+                  id="admtoken"
+                  type="password"
+                  autoFocus
+                  value={token}
+                  onChange={(e) => setToken(e.target.value)}
+                  placeholder="••••••••"
+                />
+              </div>
+              {error && (
+                <p className="mt-3 text-sm font-semibold" style={{ color: "var(--alert)" }}>
+                  {error}
+                </p>
+              )}
+              <button className="btn btn--primary btn--lg mt-5 w-full" disabled={busy || !token.trim()}>
+                {busy ? "Verificando…" : "Entrar"}
+              </button>
+            </form>
+          )}
+        </main>
+      </>
+    );
+  }
+
+  return <AdminPanel />;
+}
+
+function AdminPanel() {
   const [tab, setTab] = useState<Tab>("resumen");
   const [date, setDate] = useState(todayISO());
   const { state } = useLiveState({ date });
@@ -298,7 +396,7 @@ function MenuAdmin({ menu }: { menu: MenuItem[] }) {
   async function patch(id: string, body: Record<string, unknown>) {
     await fetch(`/api/menu/${id}`, {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
+      headers: adminHeaders(),
       body: JSON.stringify(body),
     });
   }
@@ -430,7 +528,7 @@ function ConfigAdmin({ settings }: { settings: Settings }) {
   async function save(body: Record<string, unknown>) {
     const res = await fetch("/api/settings", {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
+      headers: adminHeaders(),
       body: JSON.stringify(body),
     });
     if (res.ok) {

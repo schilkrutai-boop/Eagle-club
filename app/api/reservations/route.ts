@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AppError, createReservation } from "@/lib/db";
-import { isRealDate, todayISO } from "@/lib/format";
+import { isRealDate, santiagoNow } from "@/lib/format";
 import { CLOSE_HOUR, MAX_DONATION, OPEN_HOUR } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -21,8 +21,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Datos de reserva incompletos." }, { status: 400 });
   }
 
-  const today = todayISO();
-  if (date < today || (date === today && hour <= new Date().getHours())) {
+  const nowCl = santiagoNow();
+  if (date < nowCl.date || (date === nowCl.date && hour <= nowCl.hour)) {
     return NextResponse.json(
       { error: "Ese bloque ya pasó. Elige un horario futuro." },
       { status: 409 }

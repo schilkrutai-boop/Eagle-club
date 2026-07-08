@@ -35,7 +35,12 @@ export function useLiveState(params?: { date?: string; bay?: number }) {
     if (p?.date) qs.set("date", p.date);
     if (p?.bay) qs.set("bay", String(p.bay));
     const mySeq = ++seqRef.current;
-    const res = await fetch(`/api/state?${qs}`, { cache: "no-store" });
+    // Si esta pantalla tiene token de admin, lo manda para recibir PII.
+    const token = typeof window !== "undefined" ? localStorage.getItem("eagle_admin") : null;
+    const res = await fetch(`/api/state?${qs}`, {
+      cache: "no-store",
+      headers: token ? { "x-admin-token": token } : undefined,
+    });
     if (res.ok && mySeq === seqRef.current) setState(await res.json());
   }, []);
 

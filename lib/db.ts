@@ -1,4 +1,5 @@
 import { broadcastChange, supabaseServer } from "./supabase";
+import { santiagoDayStartISO } from "./format";
 import type {
   EmailLog,
   MenuItem,
@@ -97,12 +98,6 @@ function mapEmail(r: Record<string, unknown>): EmailLog {
   };
 }
 
-function startOfTodayISO(): string {
-  const d = new Date();
-  d.setHours(0, 0, 0, 0);
-  return d.toISOString();
-}
-
 // ---------- lecturas ----------
 export type StateResult = {
   bays: { id: number; name: string }[];
@@ -113,9 +108,13 @@ export type StateResult = {
   orders: Order[];
 };
 
-export async function getState(opts: { date?: string; bayId?: number }): Promise<StateResult> {
+export async function getState(opts: {
+  date?: string;
+  bayId?: number;
+  includePII?: boolean;
+}): Promise<StateResult> {
   const sb = supabaseServer();
-  const todayStart = startOfTodayISO();
+  const todayStart = santiagoDayStartISO();
 
   let ordersQuery = sb.from("orders").select("*").gte("created_at", todayStart);
   if (opts.bayId) ordersQuery = ordersQuery.eq("bay_id", opts.bayId);
@@ -124,23 +123,38 @@ export async function getState(opts: { date?: string; bayId?: number }): Promise
     ? sb.from("reservations").select("*").eq("date", opts.date)
     : sb.from("reservations").select("*");
 
+  // El email_log solo se consulta para el admin (no viaja a clientes públicos).
+  const emailsPromise = opts.includePII
+    ? sb.from("email_log").select("*").order("at", { ascending: false }).limit(20)
+    : Promise.resolve({ data: [] as Record<string, unknown>[] });
+
   const [bays, menu, settings, emails, reservations, orders] = await Promise.all([
     sb.from("bays").select("*").order("id"),
     sb.from("menu_items").select("*").order("sort"),
     sb.from("settings").select("*").eq("id", 1).maybeSingle(),
-    sb.from("email_log").select("*").order("at", { ascending: false }).limit(20),
+    emailsPromise,
     reservationsQuery,
     ordersQuery,
   ]);
 
+  const fullSettings = mapSettings(settings.data);
+
   return {
     bays: (bays.data ?? []) as { id: number; name: string }[],
     menu: (menu.data ?? []).map((r) => mapMenu(r as MenuRow)),
-    settings: mapSettings(settings.data),
+    // notify_emails son correos internos del equipo: solo para el admin.
+    settings: opts.includePII ? fullSettings : { ...fullSettings, notifyEmails: [] },
     emails: (emails.data ?? []).map(mapEmail),
-    reservations: (reservations.data ?? []).map(mapReservation),
+    reservations: (reservations.data ?? []).map((r) =>
+      opts.includePII ? mapReservation(r) : stripReservationPII(mapReservation(r))
+    ),
     orders: (orders.data ?? []).map(mapOrder),
   };
+}
+
+/** Quita nombre y email de la reserva para las vistas públicas (tee sheet). */
+function stripReservationPII(r: Reservation): Reservation {
+  return { ...r, name: "", email: "" };
 }
 
 // ---------- avisos por correo ----------
@@ -242,8 +256,8 @@ export async function createOrder(input: {
   await notifyTeam(
     `Nuevo pedido #${order.number} — Bahía ${String(order.bayId).padStart(2, "0")} · $${order.total.toLocaleString("es-CL")}`
   );
+  // Un solo aviso: el refetch trae estado completo (pedidos + stock nuevo).
   await broadcastChange("orders");
-  await broadcastChange("menu"); // el stock cambió
   return order;
 }
 

@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AppError, updateSettings } from "@/lib/db";
+import { isAdmin } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function PATCH(req: NextRequest) {
+  if (!isAdmin(req)) {
+    return NextResponse.json({ error: "No autorizado." }, { status: 401 });
+  }
   const body = await req.json();
   const patch: { bayPrice?: number; notifyEmails?: string[] } = {};
 
