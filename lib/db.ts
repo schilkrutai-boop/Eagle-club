@@ -1,5 +1,5 @@
 import { broadcastChange, supabaseServer } from "./supabase";
-import { santiagoDayStartISO } from "./format";
+import { santiagoDayRangeISO, santiagoDayStartISO } from "./format";
 import type {
   EmailLog,
   MenuItem,
@@ -7,6 +7,7 @@ import type {
   OrderStatus,
   Reservation,
   Settings,
+  WaitlistEntry,
 } from "./types";
 
 /** Error de dominio que las rutas mapean a un status HTTP. */
@@ -114,9 +115,16 @@ export async function getState(opts: {
   includePII?: boolean;
 }): Promise<StateResult> {
   const sb = supabaseServer();
-  const todayStart = santiagoDayStartISO();
 
-  let ordersQuery = sb.from("orders").select("*").gte("created_at", todayStart);
+  // Con fecha explícita (admin) miramos ese día completo; sin ella (cocina,
+  // bahías) miramos "hoy" en la zona del club.
+  let ordersQuery = sb.from("orders").select("*");
+  if (opts.date) {
+    const { start, end } = santiagoDayRangeISO(opts.date);
+    ordersQuery = ordersQuery.gte("created_at", start).lt("created_at", end);
+  } else {
+    ordersQuery = ordersQuery.gte("created_at", santiagoDayStartISO());
+  }
   if (opts.bayId) ordersQuery = ordersQuery.eq("bay_id", opts.bayId);
 
   const reservationsQuery = opts.date
@@ -331,4 +339,185 @@ export async function updateSettings(patch: {
   if (error) throw new AppError(500, "No pudimos guardar la configuración.");
   await broadcastChange("settings");
   return mapSettings(data);
+}
+
+// ---------- cancelaciones e invitaciones (operación del club) ----------
+
+/**
+ * Cancela una reserva: borra la fila y libera el bloque para volver a
+ * reservarlo. En el MVP equivale a un reembolso (nunca ocurrió).
+ */
+export async function cancelReservation(id: string): Promise<void> {
+  const sb = supabaseServer();
+  const { data: r, error } = await sb
+    .from("reservations")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+  if (error) throw new AppError(500, "No pudimos leer la reserva.");
+  if (!r) throw new AppError(404, "Reserva no encontrada.");
+
+  const { error: delErr } = await sb.from("reservations").delete().eq("id", id);
+  if (delErr) throw new AppError(500, "No pudimos cancelar la reserva.");
+
+  await notifyTeam(
+    `Reserva cancelada — Bahía ${String(r.bay_id).padStart(2, "0")} · ${r.date} ${String(r.hour).padStart(2, "0")}:00 · ${r.name}`
+  );
+  await broadcastChange("reservations");
+}
+
+/**
+ * Cancela un pedido: repone el stock de sus productos y borra la fila, de modo
+ * que desaparece de la cocina y deja de contar como venta.
+ */
+export async function cancelOrder(id: string): Promise<void> {
+  const sb = supabaseServer();
+  const { data: order, error } = await sb
+    .from("orders")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+  if (error) throw new AppError(500, "No pudimos leer el pedido.");
+  if (!order) throw new AppError(404, "Pedido no encontrado.");
+
+  const items = (order.items as Order["items"]) ?? [];
+  // Devuelve al inventario lo que este pedido había descontado.
+  for (const it of items) {
+    const { data: mi } = await sb
+      .from("menu_items")
+      .select("stock")
+      .eq("id", it.itemId)
+      .maybeSingle();
+    if (mi) {
+      await sb
+        .from("menu_items")
+        .update({ stock: (mi.stock as number) + it.qty, available: true })
+        .eq("id", it.itemId);
+    }
+  }
+
+  const { error: delErr } = await sb.from("orders").delete().eq("id", id);
+  if (delErr) throw new AppError(500, "No pudimos cancelar el pedido.");
+
+  await notifyTeam(
+    `Pedido #${order.number} cancelado — Bahía ${String(order.bay_id).padStart(2, "0")}`
+  );
+  await broadcastChange("orders");
+}
+
+/**
+ * Invitación de la casa: deja la comida en $0 (total = solo la donación) sin
+ * sacar el pedido de la cocina. Reversible: recalcula el total desde los ítems.
+ */
+export async function compOrder(id: string, comp: boolean): Promise<Order> {
+  const sb = supabaseServer();
+  const { data: order, error } = await sb
+    .from("orders")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+  if (error) throw new AppError(500, "No pudimos leer el pedido.");
+  if (!order) throw new AppError(404, "Pedido no encontrado.");
+
+  const items = (order.items as Order["items"]) ?? [];
+  const food = items.reduce((s, i) => s + i.price * i.qty, 0);
+  const donation = (order.donation as number) ?? 0;
+  const total = comp ? donation : food + donation;
+
+  const { data, error: upErr } = await sb
+    .from("orders")
+    .update({ total })
+    .eq("id", id)
+    .select()
+    .single();
+  if (upErr) throw new AppError(500, "No pudimos actualizar el pedido.");
+  await broadcastChange("orders");
+  return mapOrder(data);
+}
+
+// ---------- lista de espera (landing "próximamente") ----------
+
+type WaitlistRow = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  created_at: string;
+};
+
+/**
+ * Guarda a una persona en la lista de espera. El email es único (índice sobre
+ * lower(email)), así que un alta repetida se responde como conflicto amable
+ * en vez de error. Ver supabase/waitlist.sql para crear la tabla.
+ */
+export async function createWaitlistEntry(input: {
+  name: string;
+  email: string;
+  phone: string;
+}): Promise<WaitlistEntry> {
+  const sb = supabaseServer();
+  const { data, error } = await sb
+    .from("waitlist")
+    .insert({
+      id: uid(),
+      name: input.name,
+      email: input.email,
+      phone: input.phone || null,
+      source: "landing",
+    })
+    .select()
+    .single();
+
+  if (error) {
+    // 23505 = unique_violation
+    if (error.code === "23505") {
+      throw new AppError(409, "Ese email ya está en la lista. Te avisaremos.");
+    }
+    // Falta correr supabase/waitlist.sql. PostgREST responde PGRST205
+    // ("table not found in schema cache"); 42P01 es el código de Postgres.
+    if (error.code === "PGRST205" || error.code === "42P01") {
+      console.error("createWaitlistEntry: falta la tabla waitlist", error);
+      throw new AppError(
+        503,
+        "La lista de espera aún no está habilitada. Vuelve a intentar en unos minutos."
+      );
+    }
+    console.error("createWaitlistEntry", error);
+    throw new AppError(500, "No pudimos registrarte.");
+  }
+
+  const row = data as WaitlistRow;
+  return {
+    id: row.id,
+    name: row.name,
+    email: row.email,
+    phone: row.phone ?? "",
+    createdAt: row.created_at,
+  };
+}
+
+// ---------- reinicio de la demo ----------
+// Stock inicial de cada producto (igual al seed de supabase/schema.sql).
+const SEED_STOCK: Record<string, number> = {
+  tabla: 12, empanaditas: 24, alitas: 18, papas: 30, ceviche: 8,
+  barrosluco: 15, italiano: 15, club: 15, margarita: 10, pepperoni: 10,
+  brownie: 12, cheesecake: 10, jugo: 40, limonada: 40, espresso: 60,
+  cerveza: 36, aperol: 20, piscosour: 25, vino: 30, agua: 48,
+};
+
+/**
+ * Reinicia la demo a cero: borra pedidos, reservas y avisos, y restaura el
+ * stock de cada producto a su valor inicial. Pensado para empezar una demo
+ * limpia sin tocar la base a mano.
+ */
+export async function resetDemo(): Promise<{ menu: number }> {
+  const sb = supabaseServer();
+  await sb.from("orders").delete().neq("id", "");
+  await sb.from("reservations").delete().neq("id", "");
+  await sb.from("email_log").delete().neq("id", "");
+  for (const [id, stock] of Object.entries(SEED_STOCK)) {
+    await sb.from("menu_items").update({ stock, available: true }).eq("id", id);
+  }
+  await broadcastChange("reset");
+  return { menu: Object.keys(SEED_STOCK).length };
 }

@@ -3,9 +3,18 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import QRCode from "qrcode";
 import TopBar from "@/components/TopBar";
+import Modal from "@/components/Modal";
 import { useLiveState } from "@/components/useLiveState";
 import { clp, hourLabel, plural, todayISO } from "@/lib/format";
-import type { EmailLog, MenuItem, Settings } from "@/lib/types";
+import type { EmailLog, MenuItem, Order, Settings } from "@/lib/types";
+
+/** Un pedido queda "invitado" (comida gratis) cuando su total es solo la donación. */
+function foodValue(o: Order): number {
+  return o.items.reduce((s, i) => s + i.price * i.qty, 0);
+}
+function isComped(o: Order): boolean {
+  return o.items.length > 0 && o.total - o.donation === 0;
+}
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -18,15 +27,18 @@ function adminHeaders(): Record<string, string> {
   };
 }
 
-type Tab = "resumen" | "reservas" | "menu" | "config" | "qr";
+type Tab = "resumen" | "reservas" | "pedidos" | "menu" | "config" | "qr";
 
 const TABS: [Tab, string][] = [
   ["resumen", "Resumen"],
   ["reservas", "Reservas"],
+  ["pedidos", "Pedidos"],
   ["menu", "Menú e inventario"],
   ["config", "Configuración"],
   ["qr", "QR de bahías"],
 ];
+
+const DATE_TABS: Tab[] = ["resumen", "reservas", "pedidos"];
 
 export default function AdminPage() {
   // "checking" hasta validar el token guardado; "locked" pide token; "ok" entra.
@@ -120,7 +132,7 @@ export default function AdminPage() {
 function AdminPanel() {
   const [tab, setTab] = useState<Tab>("resumen");
   const [date, setDate] = useState(todayISO());
-  const { state } = useLiveState({ date });
+  const { state, refresh } = useLiveState({ date });
 
   const reservations = (state?.reservations ?? []).sort(
     (a, b) => a.hour - b.hour || a.bayId - b.bayId
@@ -128,18 +140,46 @@ function AdminPanel() {
   const orders = state?.orders ?? [];
   const isToday = date === todayISO();
 
-  // El Resumen siempre mira "hoy": al entrar, vuelve la fecha a hoy para no
-  // mezclar reservas de otra fecha con los pedidos (que siempre son de hoy).
-  function selectTab(t: Tab) {
-    if (t === "resumen") setDate(todayISO());
-    setTab(t);
-  }
-
+  // Reservas y pedidos vienen filtrados por la fecha elegida, así que las
+  // ventas del día cuadran para cualquier fecha (no solo hoy).
   const foodSales = orders.reduce((s, o) => s + (o.total - o.donation), 0);
-  const baySales = isToday ? reservations.reduce((s, r) => s + r.total, 0) : 0;
+  const baySales = reservations.reduce((s, r) => s + r.total, 0);
   const donations =
     orders.reduce((s, o) => s + o.donation, 0) +
-    (isToday ? reservations.reduce((s, r) => s + r.donation, 0) : 0);
+    reservations.reduce((s, r) => s + r.donation, 0);
+
+  async function cancelReservation(id: string) {
+    if (
+      !window.confirm(
+        "¿Cancelar esta reserva? El bloque quedará libre para reservar de nuevo."
+      )
+    )
+      return;
+    await fetch(`/api/reservations/${id}`, { method: "DELETE", headers: adminHeaders() });
+    refresh();
+  }
+
+  async function cancelOrder(id: string) {
+    if (
+      !window.confirm(
+        "¿Cancelar este pedido? Se repone el stock y desaparece de la cocina."
+      )
+    )
+      return;
+    await fetch(`/api/orders/${id}`, { method: "DELETE", headers: adminHeaders() });
+    refresh();
+  }
+
+  async function compOrder(id: string, comp: boolean) {
+    await fetch(`/api/orders/${id}`, {
+      method: "PATCH",
+      headers: adminHeaders(),
+      body: JSON.stringify({ comp }),
+    });
+    refresh();
+  }
+
+  const dateHint = isToday ? "hoy" : date;
 
   return (
     <>
@@ -156,7 +196,7 @@ function AdminPanel() {
           {TABS.map(([t, label]) => (
             <button
               key={t}
-              onClick={() => selectTab(t)}
+              onClick={() => setTab(t)}
               className="whitespace-nowrap px-4 py-2.5 text-sm font-semibold"
               style={
                 tab === t
@@ -170,11 +210,24 @@ function AdminPanel() {
           ))}
         </div>
 
+        {/* Selector de fecha compartido por Resumen, Reservas y Pedidos */}
+        {DATE_TABS.includes(tab) && (
+          <div className="field mt-6 max-w-[220px]">
+            <label htmlFor="adate">Fecha</label>
+            <input
+              id="adate"
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
+          </div>
+        )}
+
         {tab === "resumen" && (
           <section className="mt-6">
             <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-              <Stat label="Reservas" value={String(reservations.length)} hint={isToday ? "hoy" : date} />
-              <Stat label="Pedidos" value={String(orders.length)} hint="hoy" />
+              <Stat label="Reservas" value={String(reservations.length)} hint={dateHint} />
+              <Stat label="Pedidos" value={String(orders.length)} hint={dateHint} />
               <Stat label="Venta del día" value={clp(foodSales + baySales)} hint="bahías + cocina" />
               <Stat label="💧 Water Is Life" value={clp(donations)} hint="aportes de socios" />
             </div>
@@ -190,25 +243,15 @@ function AdminPanel() {
 
         {tab === "reservas" && (
           <section className="mt-6">
-            <div className="field max-w-[220px]">
-              <label htmlFor="adate">Fecha</label>
-              <input
-                id="adate"
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-              />
-            </div>
-
-            <div className="card mt-4 overflow-x-auto">
-              <table className="w-full min-w-[640px] text-sm">
+            <div className="card overflow-x-auto">
+              <table className="w-full min-w-[720px] text-sm">
                 <thead>
                   <tr
                     className="text-left"
                     style={{ borderBottom: "1px solid var(--line)" }}
                   >
-                    {["Hora", "Bahía", "Socio", "Jugadores", "Pago", "Código"].map((h) => (
-                      <th key={h} className="eyebrow px-4 py-3 font-semibold">
+                    {["Hora", "Bahía", "Socio", "Jugadores", "Pago", "Código", ""].map((h, i) => (
+                      <th key={i} className="eyebrow px-4 py-3 font-semibold">
                         {h}
                       </th>
                     ))}
@@ -217,7 +260,7 @@ function AdminPanel() {
                 <tbody>
                   {reservations.length === 0 && (
                     <tr>
-                      <td colSpan={6} className="px-4 py-10 text-center" style={{ color: "var(--faint)" }}>
+                      <td colSpan={7} className="px-4 py-10 text-center" style={{ color: "var(--faint)" }}>
                         Sin reservas para esta fecha todavía.
                       </td>
                     </tr>
@@ -253,12 +296,29 @@ function AdminPanel() {
                       <td className="mono px-4 py-3 text-xs uppercase" style={{ color: "var(--faint)" }}>
                         {r.id}
                       </td>
+                      <td className="px-4 py-3 text-right">
+                        <button
+                          className="btn btn--outline btn--sm"
+                          onClick={() => cancelReservation(r.id)}
+                        >
+                          Cancelar
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           </section>
+        )}
+
+        {tab === "pedidos" && (
+          <OrdersAdmin
+            orders={orders}
+            dateHint={dateHint}
+            onCancel={cancelOrder}
+            onComp={compOrder}
+          />
         )}
 
         {tab === "menu" && <MenuAdmin menu={state?.menu ?? []} />}
@@ -384,6 +444,125 @@ function EmailLogCard({ emails }: { emails: EmailLog[] }) {
         </ul>
       )}
     </div>
+  );
+}
+
+const STATUS_ES: Record<string, string> = {
+  nuevo: "Nuevo",
+  preparando: "En preparación",
+  listo: "Listo",
+  entregado: "Entregado",
+};
+
+function OrdersAdmin({
+  orders,
+  dateHint,
+  onCancel,
+  onComp,
+}: {
+  orders: Order[];
+  dateHint: string;
+  onCancel: (id: string) => void;
+  onComp: (id: string, comp: boolean) => void;
+}) {
+  const sorted = useMemo(() => [...orders].sort((a, b) => b.number - a.number), [orders]);
+
+  return (
+    <section className="mt-6">
+      <p className="text-sm" style={{ color: "var(--mid)" }}>
+        Pedidos de {dateHint}. Cancela un pedido para reponer su stock y sacarlo
+        de la cocina, o invítalo (comida gratis) sin sacarlo del flujo.
+      </p>
+      <div className="card mt-4 overflow-x-auto">
+        <table className="w-full min-w-[760px] text-sm">
+          <thead>
+            <tr className="text-left" style={{ borderBottom: "1px solid var(--line)" }}>
+              {["#", "Bahía", "Productos", "Estado", "Total", "Hora", ""].map((h, i) => (
+                <th key={i} className="eyebrow px-4 py-3 font-semibold">
+                  {h}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {sorted.length === 0 && (
+              <tr>
+                <td colSpan={7} className="px-4 py-10 text-center" style={{ color: "var(--faint)" }}>
+                  Sin pedidos para esta fecha todavía.
+                </td>
+              </tr>
+            )}
+            {sorted.map((o) => {
+              const comped = isComped(o);
+              return (
+                <tr key={o.id} style={{ borderBottom: "1px solid var(--line)" }}>
+                  <td className="mono px-4 py-3 font-semibold">#{o.number}</td>
+                  <td className="mono px-4 py-3 font-semibold">
+                    {String(o.bayId).padStart(2, "0")}
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="max-w-[280px]">
+                      {o.items.map((i) => `${i.qty}× ${i.name}`).join(" · ")}
+                    </div>
+                    {o.note && (
+                      <div className="text-xs italic" style={{ color: "var(--faint)" }}>
+                        “{o.note}”
+                      </div>
+                    )}
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className="chip">{STATUS_ES[o.status] ?? o.status}</span>
+                  </td>
+                  <td className="mono px-4 py-3">
+                    {comped ? (
+                      <span className="flex flex-col">
+                        <span className="badge-sold" style={{ background: "var(--gold)" }}>
+                          🎁 Invitación
+                        </span>
+                        <span className="mt-1 text-xs line-through" style={{ color: "var(--faint)" }}>
+                          {clp(foodValue(o))}
+                        </span>
+                      </span>
+                    ) : (
+                      <>
+                        {clp(o.total)}
+                        {o.donation > 0 && (
+                          <span className="ml-1 text-xs" style={{ color: "var(--crimson-dark)" }}>
+                            💧
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </td>
+                  <td className="mono px-4 py-3 text-xs" style={{ color: "var(--faint)" }}>
+                    {new Date(o.createdAt).toLocaleTimeString("es-CL", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex justify-end gap-2">
+                      {comped ? (
+                        <button className="btn btn--outline btn--sm" onClick={() => onComp(o.id, false)}>
+                          Cobrar
+                        </button>
+                      ) : (
+                        <button className="btn btn--outline btn--sm" onClick={() => onComp(o.id, true)}>
+                          Invitar
+                        </button>
+                      )}
+                      <button className="btn btn--outline btn--sm" onClick={() => onCancel(o.id)}>
+                        Cancelar
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </section>
   );
 }
 
@@ -647,7 +826,93 @@ function ConfigAdmin({ settings }: { settings: Settings }) {
           ✓ Configuración guardada
         </p>
       )}
+
+      <DangerZone />
     </section>
+  );
+}
+
+function DangerZone() {
+  const [confirming, setConfirming] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [done, setDone] = useState(false);
+
+  async function reset() {
+    setBusy(true);
+    try {
+      const res = await fetch("/api/admin/reset", {
+        method: "POST",
+        headers: adminHeaders(),
+      });
+      if (res.ok) {
+        setDone(true);
+        setTimeout(() => setDone(false), 2500);
+      }
+    } finally {
+      setBusy(false);
+      setConfirming(false);
+    }
+  }
+
+  return (
+    <div className="card p-5" style={{ borderColor: "var(--line-strong)" }}>
+      <div className="eyebrow" style={{ color: "var(--alert)" }}>
+        Zona de reinicio
+      </div>
+      <p className="mt-1 text-sm" style={{ color: "var(--mid)" }}>
+        Borra todas las reservas, pedidos y avisos, y restaura el inventario a su
+        stock inicial. Úsalo para empezar una demo desde cero.
+      </p>
+      <button
+        className="btn btn--sm mt-3"
+        style={{ background: "var(--alert)", color: "#fff" }}
+        onClick={() => setConfirming(true)}
+      >
+        Reiniciar demo
+      </button>
+      {done && (
+        <p className="fade-in mt-2 text-sm font-semibold" style={{ color: "var(--ok)" }}>
+          ✓ Demo reiniciada
+        </p>
+      )}
+
+      {confirming && (
+        <Modal
+          onClose={() => {
+            if (!busy) setConfirming(false);
+          }}
+          label="Confirmar reinicio de la demo"
+        >
+          <div>
+            <p className="eyebrow" style={{ color: "var(--alert)" }}>
+              Reiniciar demo
+            </p>
+            <h2 className="display mt-1 text-2xl">¿Empezar de cero?</h2>
+            <p className="mt-3 text-sm" style={{ color: "var(--mid)" }}>
+              Se borrarán todas las reservas y pedidos de la demo y el inventario
+              volverá a su stock inicial. Esta acción no se puede deshacer.
+            </p>
+            <div className="mt-6 grid grid-cols-2 gap-2">
+              <button
+                className="btn btn--outline"
+                onClick={() => setConfirming(false)}
+                disabled={busy}
+              >
+                Cancelar
+              </button>
+              <button
+                className="btn"
+                style={{ background: "var(--alert)", color: "#fff" }}
+                onClick={reset}
+                disabled={busy}
+              >
+                {busy ? "Reiniciando…" : "Sí, reiniciar"}
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
+    </div>
   );
 }
 

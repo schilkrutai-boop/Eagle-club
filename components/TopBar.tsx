@@ -15,7 +15,7 @@ export default function TopBar() {
   return (
     <header className="topbar">
       <div className="wrap topbar-inner">
-        <Link href="/" className="wordmark">
+        <Link href="/demo" className="wordmark">
           <LogoMark height={30} />
           <span className="mark">Eagle Club</span>
           <span className="sub hidden sm:inline">Indoor Golf</span>

@@ -64,6 +64,14 @@ export type EmailLog = {
   subject: string;
 };
 
+export type WaitlistEntry = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  createdAt: string; // ISO 8601
+};
+
 export type DB = {
   bays: Bay[];
   menu: MenuItem[];

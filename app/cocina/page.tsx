@@ -116,6 +116,15 @@ export default function CocinaPage() {
                           </div>
                         </div>
 
+                        {o.total - o.donation === 0 && o.items.length > 0 && (
+                          <div
+                            className="mx-4 mt-3 rounded-md px-3 py-1.5 text-center text-xs font-semibold"
+                            style={{ background: "rgba(201,163,92,.18)", color: "var(--gold)" }}
+                          >
+                            🎁 Invitación de la casa
+                          </div>
+                        )}
+
                         <ul className="grid gap-1.5 px-4 py-3">
                           {o.items.map((i, idx) => (
                             <li key={idx} className="flex gap-3 text-[15px]">

@@ -11,7 +11,7 @@ Router) + Supabase (Postgres + Realtime), lista para desplegar en Vercel.
 | Tee sheet | `/reservar` | Reserva de bahías con disponibilidad en tiempo real y pago demo |
 | Consola de bahía | `/b/1` … `/b/6` | Menú con fotos, alérgenos y stock; pedido a cocina (pantalla del iPad / destino del QR) |
 | Cocina (KDS) | `/cocina` | Tablero en vivo: Nuevos → En preparación → Listos |
-| Administración | `/admin` | Ventas, inventario, precios, reservas, correos de aviso y QR |
+| Administración | `/admin` | Ventas por fecha, pedidos (cancelar / invitar), reservas (cancelar), inventario, precios, correos de aviso, QR y reinicio de la demo |
 
 ## Arquitectura
 
@@ -55,11 +55,27 @@ npm run dev        # http://localhost:3000
 3. En **Environment Variables**, agrega las tres de arriba
    (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
    `SUPABASE_SERVICE_ROLE_KEY`) para Production, Preview y Development.
+   `NEXT_PUBLIC_SITE_URL` es opcional (Vercel usa la URL del deploy si falta).
 4. **Deploy.** Cada push a `main` redepliega solo.
+
+## Landing "próximamente" y lista de espera
+
+- `/` es la landing pública con video de fondo y formulario de lista de espera
+  (nombre / email / teléfono). El home operativo del club (bahías, cocina,
+  admin) se movió a `/demo`.
+- Para que el formulario guarde datos, corre una vez `supabase/waitlist.sql`
+  en el **SQL Editor** de Supabase. Sin la tabla, la landing muestra un aviso
+  amable ("la lista aún no está habilitada") en vez de fallar.
+- Los datos de la lista son PII: la tabla tiene RLS activo sin políticas, así
+  que solo el `service_role` del servidor puede leerlos/escribirlos.
 
 ## Notas
 
-- La zona horaria del club es **America/Santiago**; el corte de "hoy" en el
-  admin y la cocina usa esa zona.
-- Para reiniciar la demo a cero, vacía las tablas `orders`, `reservations`,
-  `email_log` y restaura `menu_items.stock` (o re-corre el seed).
+- La zona horaria del club es **America/Santiago**; el corte de "hoy" en la
+  cocina y las ventas por fecha del admin usan esa zona.
+- **Operación desde el admin:** cancelar una reserva libera su bloque;
+  cancelar un pedido repone su stock y lo saca de la cocina; "invitar" un
+  pedido lo deja gratis (comida en $0) sin sacarlo del flujo de cocina.
+- Para reiniciar la demo a cero, usa **Admin → Configuración → Reiniciar
+  demo** (borra reservas, pedidos y avisos, y restaura el stock inicial). El
+  script `_reset.mjs` sigue disponible como alternativa por terminal.

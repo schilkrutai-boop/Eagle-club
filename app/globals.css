@@ -472,3 +472,231 @@ body {
     -webkit-print-color-adjust: exact;
   }
 }
+
+/* ---------- landing "próximamente" ---------- */
+.lp {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #0c0605;
+  color: var(--on-wine);
+}
+
+.lp-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  filter: grayscale(1) contrast(1.06) brightness(0.9);
+}
+
+/* velo: el metraje es gris medio, sin esto no se lee nada encima */
+.lp-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(115% 85% at 50% 32%, rgba(12, 6, 5, 0.26) 0%, rgba(12, 6, 5, 0.72) 58%, rgba(12, 6, 5, 0.94) 100%),
+    linear-gradient(180deg, rgba(12, 6, 5, 0.82) 0%, rgba(12, 6, 5, 0.4) 26%, rgba(12, 6, 5, 0.74) 68%, rgba(12, 6, 5, 0.97) 100%),
+    linear-gradient(180deg, rgba(75, 33, 30, 0.32) 0%, rgba(75, 33, 30, 0.12) 100%);
+}
+
+.lp-content {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.lp-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding-top: 48px;
+  padding-bottom: 40px;
+}
+
+.lp-logo {
+  width: clamp(228px, 32vw, 396px);
+  height: auto;
+}
+
+.lp-rule {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(180deg, transparent, rgba(201, 163, 92, 0.85), transparent);
+}
+
+.lp-kicker {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.lp-title {
+  font-size: clamp(28px, 5.4vw, 62px);
+  letter-spacing: 0.1em;
+  line-height: 1.16;
+  text-wrap: balance;
+  color: var(--on-wine);
+}
+
+.lp-lead {
+  max-width: 48ch;
+  font-size: clamp(14.5px, 1.5vw, 17px);
+  line-height: 1.75;
+  color: var(--on-wine-dim);
+}
+
+/* ---------- formulario sobre superficie oscura ---------- */
+.lp-form {
+  width: 100%;
+  max-width: 560px;
+}
+
+.lp-fields {
+  display: grid;
+  gap: 20px;
+  text-align: left;
+}
+
+@media (min-width: 720px) {
+  .lp-fields {
+    grid-template-columns: 1fr 1fr;
+  }
+  .lp-field--wide {
+    grid-column: 1 / -1;
+  }
+}
+
+.lp-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.lp-field label {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(246, 239, 230, 0.55);
+}
+
+.lp-field input {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid rgba(246, 239, 230, 0.24);
+  border-radius: 0;
+  padding: 9px 2px;
+  font-family: inherit;
+  font-size: 15.5px;
+  color: var(--on-wine);
+  transition: border-color 0.18s;
+}
+
+.lp-field input::placeholder {
+  color: rgba(246, 239, 230, 0.26);
+}
+
+.lp-field input:hover:not(:disabled) {
+  border-bottom-color: rgba(246, 239, 230, 0.44);
+}
+
+.lp-field input:focus {
+  outline: none;
+  border-bottom-color: var(--gold);
+}
+
+.lp-field input:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+
+.lp-field input:disabled {
+  opacity: 0.5;
+}
+
+/* el foco carmesí del sistema es invisible sobre esta superficie */
+.lp .btn:focus-visible {
+  outline-color: var(--gold);
+}
+
+.btn--gold {
+  background: var(--gold);
+  color: #22190c;
+  border-color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 12.5px;
+}
+
+.btn--gold:hover:not(:disabled) {
+  background: #d9b671;
+  border-color: #d9b671;
+}
+
+.lp-error {
+  font-size: 13.5px;
+  color: #f0a9ae;
+}
+
+.lp-fine {
+  font-size: 11.5px;
+  color: rgba(246, 239, 230, 0.42);
+}
+
+.lp-done {
+  width: 100%;
+  max-width: 460px;
+  border: 1px solid rgba(201, 163, 92, 0.42);
+  border-radius: 10px;
+  padding: 30px 26px;
+  background: rgba(12, 6, 5, 0.45);
+}
+
+.lp-done-text {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--on-wine-dim);
+}
+
+.lp-foot {
+  position: relative;
+  z-index: 2;
+  border-top: 1px solid rgba(246, 239, 230, 0.12);
+}
+
+/* entrada escalonada al cargar */
+.lp-rise {
+  opacity: 0;
+  transform: translateY(18px);
+  animation: lpRise 1s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+@keyframes lpRise {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lp-rise {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}

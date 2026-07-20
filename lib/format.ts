@@ -81,3 +81,26 @@ export function santiagoDayStartISO(): string {
   const midnightAsIfUTC = Date.UTC(Number(p.year), Number(p.month) - 1, Number(p.day), 0, 0, 0);
   return new Date(midnightAsIfUTC - offsetMs).toISOString();
 }
+
+/**
+ * Ventana UTC [start, end) que cubre un día calendario (YYYY-MM-DD) en la zona
+ * del club. Sirve para consultar los pedidos de una fecha cualquiera, no solo
+ * hoy. El offset se toma al mediodía de ese día para evitar el borde de DST.
+ */
+export function santiagoDayRangeISO(dateISO: string): { start: string; end: string } {
+  const [y, mo, d] = dateISO.split("-").map(Number);
+  const noonUTC = new Date(Date.UTC(y, mo - 1, d, 12, 0, 0));
+  const p = santiagoParts(noonUTC);
+  const asIfUTC = Date.UTC(
+    Number(p.year),
+    Number(p.month) - 1,
+    Number(p.day),
+    Number(p.hour),
+    Number(p.minute),
+    Number(p.second)
+  );
+  const offsetMs = asIfUTC - noonUTC.getTime();
+  const start = new Date(Date.UTC(y, mo - 1, d, 0, 0, 0) - offsetMs).toISOString();
+  const end = new Date(Date.UTC(y, mo - 1, d + 1, 0, 0, 0) - offsetMs).toISOString();
+  return { start, end };
+}
