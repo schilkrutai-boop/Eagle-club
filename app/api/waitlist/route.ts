@@ -1,9 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
-import { AppError, createWaitlistEntry } from "@/lib/db";
+import { AppError, createWaitlistEntry, listWaitlist } from "@/lib/db";
+import { isAdmin } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/** Lista de inscritos para el panel del equipo. Protegida (PII). */
+export async function GET(req: NextRequest) {
+  if (!isAdmin(req)) {
+    return NextResponse.json({ error: "No autorizado." }, { status: 401 });
+  }
+  try {
+    const entries = await listWaitlist();
+    return NextResponse.json({ entries });
+  } catch (err) {
+    if (err instanceof AppError) {
+      return NextResponse.json({ error: err.message }, { status: err.status });
+    }
+    console.error("GET /api/waitlist", err);
+    return NextResponse.json({ error: "No pudimos cargar la lista." }, { status: 500 });
+  }
+}
 
 /**
  * Alta en la lista de espera de la landing. Es un endpoint público que

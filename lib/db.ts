@@ -486,7 +486,11 @@ export async function createWaitlistEntry(input: {
     throw new AppError(500, "No pudimos registrarte.");
   }
 
-  const row = data as WaitlistRow;
+  await broadcastChange("waitlist");
+  return mapWaitlist(data as WaitlistRow);
+}
+
+function mapWaitlist(row: WaitlistRow): WaitlistEntry {
   return {
     id: row.id,
     name: row.name,
@@ -494,6 +498,27 @@ export async function createWaitlistEntry(input: {
     phone: row.phone ?? "",
     createdAt: row.created_at,
   };
+}
+
+/**
+ * Lista completa de inscritos, más nuevos primero. Contiene PII, así que la
+ * ruta que la expone debe estar detrás del gate de admin.
+ */
+export async function listWaitlist(): Promise<WaitlistEntry[]> {
+  const sb = supabaseServer();
+  const { data, error } = await sb
+    .from("waitlist")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    if (error.code === "PGRST205" || error.code === "42P01") {
+      throw new AppError(503, "La lista de espera aún no está habilitada.");
+    }
+    console.error("listWaitlist", error);
+    throw new AppError(500, "No pudimos cargar la lista.");
+  }
+  return (data as WaitlistRow[]).map(mapWaitlist);
 }
 
 // ---------- reinicio de la demo ----------
