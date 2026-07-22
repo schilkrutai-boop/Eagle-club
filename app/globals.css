@@ -525,7 +525,7 @@ body {
 }
 
 .lp-logo {
-  width: clamp(228px, 32vw, 396px);
+  width: clamp(290px, 44vw, 500px);
   height: auto;
 }
 

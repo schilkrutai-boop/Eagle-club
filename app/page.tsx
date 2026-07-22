@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import HeroVideo from "@/components/HeroVideo";
 import WaitlistForm from "@/components/WaitlistForm";
-import logoLight from "@/public/media/eagleclub-logo-light.png";
+import logo from "@/public/media/eagleclub-logo-stacked.png";
 
 // Solo fijamos metadataBase si hay dominio explícito. Si no, dejamos que Next
 // use su fallback (la URL del deploy en Vercel); hardcodear localhost rompería
@@ -47,10 +47,10 @@ export default function ComingSoon() {
       <div className="lp-content">
         <div className="wrap lp-inner">
           <Image
-            src={logoLight}
+            src={logo}
             alt="Eagle Club — Indoor Golf"
             className="lp-logo lp-rise"
-            sizes="(max-width: 640px) 78vw, 396px"
+            sizes="(max-width: 640px) 86vw, 500px"
             loading="eager"
           />
 
