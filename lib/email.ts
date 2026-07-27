@@ -26,6 +26,8 @@ const HERO_PATH = "/media/email-hero-wide.jpg";
 const IGICON_PATH = "/media/ig-icon.png";
 const INSTAGRAM_URL = "https://www.instagram.com/eagleclub.cl/";
 const WEB_URL = "https://eagleclub.cl";
+const CONTACT_EMAIL = "contacto@eagleclub.cl";
+const ADDRESS = "Isidora Goyenechea 3000";
 
 function siteBaseUrl(): string {
   const explicit = process.env.NEXT_PUBLIC_SITE_URL;
@@ -105,6 +107,9 @@ function welcomeText(): string {
     "Nos vemos muy pronto.",
     "",
     "EAGLE CLUB",
+    "",
+    "contacto@eagleclub.cl · eagleclub.cl",
+    "Isidora Goyenechea 3000",
   ].join("\n");
 }
 
@@ -155,7 +160,11 @@ function welcomeHtml(logoUrl: string, heroUrl: string, igIconUrl: string): strin
         </td></tr>
         <tr><td style="padding:22px 40px 40px;text-align:center;border-top:1px solid rgba(201,163,92,0.16);">
           <a href="${INSTAGRAM_URL}" style="text-decoration:none;display:inline-block;"><img src="${igIconUrl}" alt="Instagram" width="26" height="26" style="width:26px;height:26px;display:inline-block;border:0;outline:none;text-decoration:none;" /></a>
-          <div style="margin-top:12px;"><a href="${WEB_URL}" style="color:${gold};font-family:Arial,Helvetica,sans-serif;font-size:13px;letter-spacing:0.06em;text-decoration:none;">eagleclub.cl</a></div>
+          <div style="margin-top:14px;line-height:1.9;">
+            <a href="${WEB_URL}" style="color:${gold};font-family:Arial,Helvetica,sans-serif;font-size:13px;letter-spacing:0.06em;text-decoration:none;">eagleclub.cl</a><br />
+            <a href="mailto:${CONTACT_EMAIL}" style="color:${gold};font-family:Arial,Helvetica,sans-serif;font-size:13px;letter-spacing:0.06em;text-decoration:none;">${CONTACT_EMAIL}</a>
+          </div>
+          <div style="margin-top:10px;color:#8a8175;font-family:Arial,Helvetica,sans-serif;font-size:12px;letter-spacing:0.05em;">${ADDRESS}</div>
         </td></tr>
       </table>
     </td></tr>
