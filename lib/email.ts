@@ -162,7 +162,7 @@ function welcomeHtml(logoUrl: string, heroUrl: string, igIconUrl: string): strin
           <a href="${INSTAGRAM_URL}" style="text-decoration:none;display:inline-block;"><img src="${igIconUrl}" alt="Instagram" width="26" height="26" style="width:26px;height:26px;display:inline-block;border:0;outline:none;text-decoration:none;" /></a>
           <div style="margin-top:14px;line-height:1.9;">
             <a href="${WEB_URL}" style="color:${gold};font-family:Arial,Helvetica,sans-serif;font-size:13px;letter-spacing:0.06em;text-decoration:none;">eagleclub.cl</a><br />
-            <a href="mailto:${CONTACT_EMAIL}" style="color:${gold};font-family:Arial,Helvetica,sans-serif;font-size:13px;letter-spacing:0.06em;text-decoration:none;">${CONTACT_EMAIL}</a>
+            <a href="mailto:${CONTACT_EMAIL}" style="color:#8a8175;font-family:Arial,Helvetica,sans-serif;font-size:12px;letter-spacing:0.05em;text-decoration:none;">${CONTACT_EMAIL}</a>
           </div>
           <div style="margin-top:10px;color:#8a8175;font-family:Arial,Helvetica,sans-serif;font-size:12px;letter-spacing:0.05em;">${ADDRESS}</div>
         </td></tr>
