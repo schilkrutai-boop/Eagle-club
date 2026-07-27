@@ -22,7 +22,7 @@ const REPLY_TO = process.env.RESEND_REPLY_TO || undefined;
 // email: los data-URI base64 los bloquea Gmail). Resolvemos el dominio igual
 // que la landing y caemos al dominio de producción conocido.
 const LOGO_PATH = "/media/eagleclub-logo-stacked.png";
-const HERO_PATH = "/media/email-hero.gif?v=5";
+const HERO_PATH = "/media/email-hero.gif?v=6";
 const IGICON_PATH = "/media/ig-icon.png";
 const INSTAGRAM_URL = "https://www.instagram.com/eagleclub.cl/";
 const WEB_URL = "https://eagleclub.cl";
