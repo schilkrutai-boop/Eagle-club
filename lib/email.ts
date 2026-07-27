@@ -105,7 +105,6 @@ function welcomeText(): string {
     "Nos vemos muy pronto.",
     "",
     "EAGLE CLUB",
-    "Every Swing Matters.",
   ].join("\n");
 }
 
@@ -116,7 +115,6 @@ function welcomeHtml(logoUrl: string, heroUrl: string, igIconUrl: string): strin
   const bg = "#0c0605";
   const panel = "#141010";
   const text = "#e9e2d6";
-  const dim = "#a89f90";
 
   const paragraphs = [
     "Gracias por tu interés en formar parte de EAGLE CLUB.",
@@ -137,7 +135,7 @@ function welcomeHtml(logoUrl: string, heroUrl: string, igIconUrl: string): strin
 <html lang="es">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${WELCOME_SUBJECT}</title></head>
 <body style="margin:0;padding:0;background:${bg};">
-  <div style="display:none;max-height:0;overflow:hidden;opacity:0;">Ya estás en la lista de EAGLE CLUB. Every Swing Matters.</div>
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;">Ya estás en la lista de EAGLE CLUB.</div>
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${bg};padding:40px 16px;">
     <tr><td align="center">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:${panel};border:1px solid rgba(201,163,92,0.25);border-radius:14px;overflow:hidden;">
@@ -154,7 +152,6 @@ function welcomeHtml(logoUrl: string, heroUrl: string, igIconUrl: string): strin
         <tr><td style="padding:12px 40px 44px;font-family:Arial,Helvetica,sans-serif;">
           <p style="margin:0 0 22px;font-size:16px;line-height:1.7;color:${text};">Nos vemos muy pronto.</p>
           <img src="${logoUrl}" alt="EAGLE CLUB — Indoor Golf" width="120" style="width:120px;max-width:48%;height:auto;display:block;border:0;outline:none;text-decoration:none;" />
-          <p style="margin:14px 0 0;font-size:12px;letter-spacing:0.24em;text-transform:uppercase;color:${dim};">Every Swing Matters</p>
         </td></tr>
         <tr><td style="padding:22px 40px 40px;text-align:center;border-top:1px solid rgba(201,163,92,0.16);">
           <a href="${INSTAGRAM_URL}" style="text-decoration:none;display:inline-block;"><img src="${igIconUrl}" alt="Instagram" width="26" height="26" style="width:26px;height:26px;display:inline-block;border:0;outline:none;text-decoration:none;" /></a>
