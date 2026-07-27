@@ -91,8 +91,6 @@ function welcomeText(): string {
     "",
     "Gracias por tu interés en formar parte de EAGLE CLUB.",
     "",
-    "Hemos recibido tu registro y serás uno de los primeros en conocer lo que estamos construyendo.",
-    "",
     "EAGLE CLUB nace para ofrecer una nueva forma de vivir el golf: un espacio exclusivo donde la tecnología, el diseño y la hospitalidad crean una experiencia pensada para quienes valoran la excelencia en cada detalle.",
     "",
     "Porque el golf es mucho más que un deporte. Es un estilo de vida.",
@@ -119,7 +117,6 @@ function welcomeHtml(logoUrl: string, heroUrl: string): string {
 
   const paragraphs = [
     "Gracias por tu interés en formar parte de EAGLE CLUB.",
-    "Hemos recibido tu registro y serás uno de los primeros en conocer lo que estamos construyendo.",
     "EAGLE CLUB nace para ofrecer una nueva forma de vivir el golf: un espacio exclusivo donde la tecnología, el diseño y la hospitalidad crean una experiencia pensada para quienes valoran la excelencia en cada detalle.",
     "Porque el golf es mucho más que un deporte. Es un estilo de vida.",
     "Muy pronto compartiremos contigo nuestras primeras novedades y el acceso a beneficios exclusivos.",
@@ -157,9 +154,6 @@ function welcomeHtml(logoUrl: string, heroUrl: string): string {
           <p style="margin:14px 0 0;font-size:12px;letter-spacing:0.24em;text-transform:uppercase;color:${dim};">Every Swing Matters</p>
         </td></tr>
       </table>
-      <p style="max-width:560px;margin:20px auto 0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:1.6;color:${dim};text-align:center;">
-        Recibes este correo porque te uniste a la lista de espera de EAGLE CLUB.
-      </p>
     </td></tr>
   </table>
 </body>
