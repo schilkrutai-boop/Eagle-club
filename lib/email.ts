@@ -22,7 +22,10 @@ const REPLY_TO = process.env.RESEND_REPLY_TO || undefined;
 // email: los data-URI base64 los bloquea Gmail). Resolvemos el dominio igual
 // que la landing y caemos al dominio de producción conocido.
 const LOGO_PATH = "/media/eagleclub-logo-stacked.png";
-const HERO_PATH = "/media/email-hero.gif";
+const HERO_PATH = "/media/email-hero.gif?v=5";
+const IGICON_PATH = "/media/ig-icon.png";
+const INSTAGRAM_URL = "https://www.instagram.com/eagleclub.cl/";
+const WEB_URL = "https://eagleclub.cl";
 
 function siteBaseUrl(): string {
   const explicit = process.env.NEXT_PUBLIC_SITE_URL;
@@ -108,7 +111,7 @@ function welcomeText(): string {
 
 // Versión HTML, con la estética de la marca (negro + dorado). Estilos inline
 // porque los clientes de correo no aplican <style> ni variables CSS.
-function welcomeHtml(logoUrl: string, heroUrl: string): string {
+function welcomeHtml(logoUrl: string, heroUrl: string, igIconUrl: string): string {
   const gold = "#c9a35c";
   const bg = "#0c0605";
   const panel = "#141010";
@@ -153,6 +156,10 @@ function welcomeHtml(logoUrl: string, heroUrl: string): string {
           <img src="${logoUrl}" alt="EAGLE CLUB — Indoor Golf" width="120" style="width:120px;max-width:48%;height:auto;display:block;border:0;outline:none;text-decoration:none;" />
           <p style="margin:14px 0 0;font-size:12px;letter-spacing:0.24em;text-transform:uppercase;color:${dim};">Every Swing Matters</p>
         </td></tr>
+        <tr><td style="padding:22px 40px 40px;text-align:center;border-top:1px solid rgba(201,163,92,0.16);">
+          <a href="${INSTAGRAM_URL}" style="text-decoration:none;display:inline-block;"><img src="${igIconUrl}" alt="Instagram" width="26" height="26" style="width:26px;height:26px;display:inline-block;border:0;outline:none;text-decoration:none;" /></a>
+          <div style="margin-top:12px;"><a href="${WEB_URL}" style="color:${gold};font-family:Arial,Helvetica,sans-serif;font-size:13px;letter-spacing:0.06em;text-decoration:none;">eagleclub.cl</a></div>
+        </td></tr>
       </table>
     </td></tr>
   </table>
@@ -169,7 +176,7 @@ export async function sendWaitlistWelcomeEmail(to: string): Promise<SendResult> 
   return sendEmail({
     to,
     subject: WELCOME_SUBJECT,
-    html: welcomeHtml(`${base}${LOGO_PATH}`, `${base}${HERO_PATH}`),
+    html: welcomeHtml(`${base}${LOGO_PATH}`, `${base}${HERO_PATH}`, `${base}${IGICON_PATH}`),
     text: welcomeText(),
   });
 }
