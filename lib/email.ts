@@ -22,6 +22,7 @@ const REPLY_TO = process.env.RESEND_REPLY_TO || undefined;
 // email: los data-URI base64 los bloquea Gmail). Resolvemos el dominio igual
 // que la landing y caemos al dominio de producción conocido.
 const LOGO_PATH = "/media/eagleclub-logo-stacked.png";
+const HERO_PATH = "/media/email-hero.gif";
 
 function siteBaseUrl(): string {
   const explicit = process.env.NEXT_PUBLIC_SITE_URL;
@@ -109,7 +110,7 @@ function welcomeText(): string {
 
 // Versión HTML, con la estética de la marca (negro + dorado). Estilos inline
 // porque los clientes de correo no aplican <style> ni variables CSS.
-function welcomeHtml(logoUrl: string): string {
+function welcomeHtml(logoUrl: string, heroUrl: string): string {
   const gold = "#c9a35c";
   const bg = "#0c0605";
   const panel = "#141010";
@@ -140,11 +141,13 @@ function welcomeHtml(logoUrl: string): string {
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${bg};padding:40px 16px;">
     <tr><td align="center">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:${panel};border:1px solid rgba(201,163,92,0.25);border-radius:14px;overflow:hidden;">
-        <tr><td style="padding:44px 40px 8px;text-align:center;">
+        <tr><td style="padding:44px 40px 6px;text-align:center;">
           <img src="${logoUrl}" alt="EAGLE CLUB — Indoor Golf" width="196" style="width:196px;max-width:72%;height:auto;display:inline-block;border:0;outline:none;text-decoration:none;" />
-          <div style="margin:28px auto 0;width:56px;border-top:1px solid rgba(201,163,92,0.4);"></div>
         </td></tr>
-        <tr><td style="padding:30px 40px 8px;font-family:Arial,Helvetica,sans-serif;">
+        <tr><td style="padding:22px 26px 4px;text-align:center;">
+          <img src="${heroUrl}" alt="EAGLE CLUB — Indoor Golf" width="440" style="width:100%;max-width:440px;height:auto;border-radius:12px;display:inline-block;border:0;outline:none;text-decoration:none;" />
+        </td></tr>
+        <tr><td style="padding:26px 40px 8px;font-family:Arial,Helvetica,sans-serif;">
           <h1 style="margin:0 0 22px;font-size:22px;line-height:1.3;color:${gold};font-weight:600;">Bienvenido a EAGLE CLUB</h1>
           ${body}
         </td></tr>
@@ -168,11 +171,11 @@ function welcomeHtml(logoUrl: string): string {
  * espera. No lanza: si algo falla, el alta ya quedó guardada igual.
  */
 export async function sendWaitlistWelcomeEmail(to: string): Promise<SendResult> {
-  const logoUrl = `${siteBaseUrl()}${LOGO_PATH}`;
+  const base = siteBaseUrl();
   return sendEmail({
     to,
     subject: WELCOME_SUBJECT,
-    html: welcomeHtml(logoUrl),
+    html: welcomeHtml(`${base}${LOGO_PATH}`, `${base}${HERO_PATH}`),
     text: welcomeText(),
   });
 }
