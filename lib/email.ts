@@ -22,7 +22,7 @@ const REPLY_TO = process.env.RESEND_REPLY_TO || undefined;
 // email: los data-URI base64 los bloquea Gmail). Resolvemos el dominio igual
 // que la landing y caemos al dominio de producción conocido.
 const LOGO_PATH = "/media/eagleclub-logo-stacked.png";
-const HERO_PATH = "/media/email-hero.gif?v=7";
+const HERO_PATH = "/media/email-hero-static.jpg";
 const IGICON_PATH = "/media/ig-icon.png";
 const INSTAGRAM_URL = "https://www.instagram.com/eagleclub.cl/";
 const WEB_URL = "https://eagleclub.cl";
@@ -143,7 +143,7 @@ function welcomeHtml(logoUrl: string, heroUrl: string, igIconUrl: string): strin
           <img src="${logoUrl}" alt="EAGLE CLUB — Indoor Golf" width="196" style="width:196px;max-width:72%;height:auto;display:inline-block;border:0;outline:none;text-decoration:none;" />
         </td></tr>
         <tr><td style="padding:22px 26px 4px;text-align:center;">
-          <img src="${heroUrl}" alt="EAGLE CLUB — Indoor Golf" width="400" style="width:100%;max-width:400px;height:auto;border-radius:12px;display:inline-block;border:0;outline:none;text-decoration:none;" />
+          <img src="${heroUrl}" alt="EAGLE CLUB — Indoor Golf" width="280" style="width:100%;max-width:280px;height:auto;border-radius:12px;display:inline-block;border:0;outline:none;text-decoration:none;" />
         </td></tr>
         <tr><td style="padding:26px 40px 8px;font-family:Arial,Helvetica,sans-serif;">
           <h1 style="margin:0 0 22px;font-size:22px;line-height:1.3;color:${gold};font-weight:600;">Bienvenido a EAGLE CLUB</h1>
