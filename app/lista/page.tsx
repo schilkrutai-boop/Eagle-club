@@ -108,12 +108,42 @@ function fmtDate(iso: string): string {
   }
 }
 
+// ---------- listas por fecha de corte ----------
+// La lista "post publicación en redes sociales" no necesita columnas nuevas en
+// la base: se define por una fecha de corte. Todo inscrito con created_at >= al
+// corte pertenece a esa campaña; el resto es la lista de espera original.
+// El corte se guarda en el navegador del equipo (mismo lugar que el token).
+const CUTOFF_KEY = "eagle_redes_cutoff";
+
+const LIST_SOCIAL = "post publicación en redes sociales";
+const LIST_BASE = "lista de espera";
+
+function readCutoff(): string | null {
+  if (typeof window === "undefined") return null;
+  const v = localStorage.getItem(CUTOFF_KEY);
+  // Guardamos un ISO; si quedó algo inválido lo ignoramos en vez de romper.
+  return v && !Number.isNaN(Date.parse(v)) ? v : null;
+}
+
+function isAfterCutoff(entry: WaitlistEntry, cutoff: string | null): boolean {
+  if (!cutoff) return false;
+  const t = Date.parse(entry.createdAt);
+  return !Number.isNaN(t) && t >= Date.parse(cutoff);
+}
+
 function Board() {
   const [entries, setEntries] = useState<WaitlistEntry[] | null>(null);
   const [connected, setConnected] = useState(false);
   const [err, setErr] = useState("");
   const [copied, setCopied] = useState(false);
+  const [cutoff, setCutoff] = useState<string | null>(null);
+  const [tab, setTab] = useState<"social" | "base">("social");
   const seq = useRef(0);
+
+  // El corte vive en localStorage: lo leemos ya montados para no romper el SSR.
+  useEffect(() => {
+    setCutoff(readCutoff());
+  }, []);
 
   const refresh = useCallback(async () => {
     const token = adminToken();
@@ -172,25 +202,65 @@ function Board() {
     window.location.reload();
   }
 
+  /** Marca "acabo de publicar en redes": desde ahora los nuevos van a esa lista. */
+  function startSocial() {
+    const now = new Date().toISOString();
+    localStorage.setItem(CUTOFF_KEY, now);
+    setCutoff(now);
+    setTab("social");
+  }
+
+  /** Cierra la campaña. No borra a nadie: solo deja de separar las listas. */
+  function stopSocial() {
+    if (
+      !confirm(
+        "¿Cerrar la campaña de redes?\n\nNadie se borra: los inscritos vuelven a verse todos juntos en la lista de espera."
+      )
+    ) {
+      return;
+    }
+    localStorage.removeItem(CUTOFF_KEY);
+    setCutoff(null);
+    setTab("base");
+  }
+
+  const all = entries ?? [];
+  const social = all.filter((e) => isAfterCutoff(e, cutoff));
+  const base = all.filter((e) => !isAfterCutoff(e, cutoff));
+
+  // Sin campaña activa solo existe la lista original.
+  const active = cutoff === null ? "base" : tab;
+  const shown = active === "social" ? social : base;
+  const listName = active === "social" ? LIST_SOCIAL : LIST_BASE;
+
   function downloadCSV() {
-    if (!entries) return;
+    if (shown.length === 0) return;
     const esc = (v: string) => `"${String(v).replace(/"/g, '""')}"`;
-    const head = ["Nombre", "Email", "Telefono", "Inscrito"];
-    const rows = entries.map((e) => [e.name, e.email, e.phone, fmtDate(e.createdAt)]);
+    const head = ["Nombre", "Email", "Telefono", "Inscrito", "Lista"];
+    const rows = shown.map((e) => [
+      e.name,
+      e.email,
+      e.phone,
+      fmtDate(e.createdAt),
+      listName,
+    ]);
     const csv = [head, ...rows].map((r) => r.map(esc).join(",")).join("\r\n");
     const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "eagleclub-lista-espera.csv";
+    a.download =
+      active === "social"
+        ? "eagleclub-post-redes-sociales.csv"
+        : "eagleclub-lista-espera.csv";
     a.click();
     URL.revokeObjectURL(url);
   }
 
   async function copyEmails() {
-    if (!entries || entries.length === 0) return;
+    if (shown.length === 0) return;
     try {
-      await navigator.clipboard.writeText(entries.map((e) => e.email).join(", "));
+      await navigator.clipboard.writeText(shown.map((e) => e.email).join(", "));
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
     } catch {
@@ -198,7 +268,7 @@ function Board() {
     }
   }
 
-  const count = entries?.length ?? 0;
+  const count = shown.length;
 
   return (
     <>
@@ -217,7 +287,7 @@ function Board() {
               Eagle Club · Equipo
             </span>
             <div className="display text-lg" style={{ letterSpacing: "0.06em" }}>
-              Lista de espera
+              {cutoff ? "Listas de inscritos" : "Lista de espera"}
             </div>
           </div>
           <button
@@ -232,10 +302,58 @@ function Board() {
       </header>
 
       <main className="wrap py-8 sm:py-10">
+        {/* Selector de lista + interruptor de campaña */}
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          {cutoff ? (
+            <div className="flex flex-wrap gap-2" role="tablist">
+              <button
+                role="tab"
+                aria-selected={active === "social"}
+                onClick={() => setTab("social")}
+                className={`btn btn--sm ${active === "social" ? "btn--dark" : "btn--outline"}`}
+              >
+                Post publicación en redes · {social.length}
+              </button>
+              <button
+                role="tab"
+                aria-selected={active === "base"}
+                onClick={() => setTab("base")}
+                className={`btn btn--sm ${active === "base" ? "btn--dark" : "btn--outline"}`}
+              >
+                Lista de espera · {base.length}
+              </button>
+            </div>
+          ) : (
+            <p className="text-sm" style={{ color: "var(--mid)" }}>
+              Cuando publiques en redes, activa la campaña para separar a los que
+              lleguen desde ese post.
+            </p>
+          )}
+
+          {cutoff ? (
+            <button onClick={stopSocial} className="btn btn--outline btn--sm">
+              Cerrar campaña
+            </button>
+          ) : (
+            <button onClick={startSocial} className="btn btn--gold btn--sm">
+              Publiqué en redes — empezar lista
+            </button>
+          )}
+        </div>
+
+        {cutoff && (
+          <p className="mt-3 text-xs" style={{ color: "var(--faint)" }}>
+            Campaña iniciada el {fmtDate(cutoff)}. Todo inscrito desde esa hora
+            entra en «post publicación en redes sociales».
+          </p>
+        )}
+
         {/* Resumen */}
-        <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="mt-6 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="eyebrow">Inscritos</p>
+            <p className="eyebrow">
+              {active === "social" ? "Desde el post en redes" : "Inscritos"}
+            </p>
             <div className="flex items-baseline gap-3">
               <span
                 className="display"
@@ -292,8 +410,19 @@ function Board() {
             <p className="p-8 text-center eyebrow">Cargando…</p>
           ) : count === 0 ? (
             <p className="p-10 text-center" style={{ color: "var(--mid)" }}>
-              Aún no hay inscritos. Cuando alguien complete el formulario en{" "}
-              <span className="mono">eagleclub.cl</span>, aparecerá aquí al instante.
+              {active === "social" ? (
+                <>
+                  Nadie se ha inscrito desde que publicaste. Quien complete el
+                  formulario en <span className="mono">eagleclub.cl</span> de ahora
+                  en adelante aparecerá aquí al instante.
+                </>
+              ) : (
+                <>
+                  Aún no hay inscritos. Cuando alguien complete el formulario en{" "}
+                  <span className="mono">eagleclub.cl</span>, aparecerá aquí al
+                  instante.
+                </>
+              )}
             </p>
           ) : (
             <table className="w-full" style={{ borderCollapse: "collapse", minWidth: 640 }}>
@@ -315,7 +444,7 @@ function Board() {
                 </tr>
               </thead>
               <tbody>
-                {entries.map((e, i) => (
+                {shown.map((e, i) => (
                   <tr key={e.id} style={{ borderBottom: "1px solid var(--line)" }}>
                     <td
                       className="mono"

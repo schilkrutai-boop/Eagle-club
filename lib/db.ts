@@ -1,4 +1,5 @@
 import { broadcastChange, supabaseServer } from "./supabase";
+import { sendWaitlistWelcomeEmail } from "./email";
 import { santiagoDayRangeISO, santiagoDayStartISO } from "./format";
 import type {
   EmailLog,
@@ -487,6 +488,12 @@ export async function createWaitlistEntry(input: {
   }
 
   await broadcastChange("waitlist");
+
+  // Correo de bienvenida por Resend. Es best effort y ya está protegido para no
+  // lanzar: si falla, el alta igual quedó guardada. Solo se envía en altas
+  // nuevas — un email repetido sale por 23505 arriba y nunca llega hasta acá.
+  await sendWaitlistWelcomeEmail(input.email);
+
   return mapWaitlist(data as WaitlistRow);
 }
 
