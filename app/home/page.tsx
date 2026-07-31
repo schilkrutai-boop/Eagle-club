@@ -368,9 +368,8 @@ export default function HomePage() {
           </Reveal>
           <Reveal delay={220}>
             <p className="site-body" style={{ marginTop: 30 }}>
-              En el corazón de El Golf, a pasos del Hotel W y del eje Isidora
-              Goyenechea: la mejor gastronomía, servicios y seguridad en un
-              mismo entorno.
+              En el corazón de El Golf, sobre el eje Isidora Goyenechea: la
+              mejor gastronomía, servicios y seguridad en un mismo entorno.
             </p>
           </Reveal>
 
@@ -383,14 +382,15 @@ export default function HomePage() {
                 <Image
                   src={ubiHotel}
                   placeholder="blur"
-                  alt="Hotel W Las Condes al atardecer"
+                  alt="Skyline del barrio El Golf al atardecer"
                   sizes="(max-width: 900px) 100vw, 28vw"
                   style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 />
               </div>
-              <h3>Hotel W Las Condes</h3>
+              <h3>Barrio El Golf</h3>
               <p>
-                A pasos del Hotel W, en el barrio más exclusivo de Santiago.
+                En el barrio más exclusivo de Santiago, rodeado de los
+                principales hoteles y oficinas.
               </p>
             </Reveal>
 
