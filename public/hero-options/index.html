@@ -18,7 +18,9 @@
     h1 { margin:0; font-family:Georgia, 'Times New Roman', serif; font-size:clamp(20px,2.4vw,32px); font-weight:400; }
     .counter { min-width:76px; text-align:right; font-size:13px; letter-spacing:.12em; color:var(--muted); }
     .stage { position:relative; min-height:0; overflow:hidden; background:#050505; }
-    .photo { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transform:scale(1.01); transition:opacity .45s ease, transform 1.1s ease; }
+    .photo-backdrop { position:absolute; inset:-32px; width:calc(100% + 64px); height:calc(100% + 64px); object-fit:cover; filter:blur(28px) brightness(.42) saturate(.8); opacity:0; transform:scale(1.06); transition:opacity .45s ease; }
+    .photo-backdrop.active { opacity:1; }
+    .photo { position:absolute; z-index:1; inset:0; width:100%; height:100%; object-fit:contain; opacity:0; transform:scale(1.005); transition:opacity .45s ease, transform 1.1s ease; }
     .photo.active { opacity:1; transform:scale(1); }
     .shade { position:absolute; inset:0; pointer-events:none; background:linear-gradient(180deg,#00000012 45%,#000000d9 100%); }
     .caption { position:absolute; z-index:2; left:clamp(22px,5vw,76px); right:clamp(22px,5vw,76px); bottom:clamp(24px,5vw,66px); max-width:720px; }
@@ -120,11 +122,13 @@
     let current = 0, startX = 0;
     const favorites = new Set(JSON.parse(localStorage.getItem('eagle-hero-favorites') || '[]'));
     slides.forEach((slide, i) => {
+      const backdrop = new Image(); backdrop.src = root + slide[0]; backdrop.alt = ''; backdrop.className = 'photo-backdrop'; if (!i) backdrop.classList.add('active'); photos.append(backdrop);
       const image = new Image(); image.src = root + slide[0]; image.alt = slide[1]; image.className = 'photo'; if (!i) image.classList.add('active'); photos.append(image);
       const button = document.createElement('button'); button.className = 'thumb' + (!i ? ' active' : '') + (favorites.has(i) ? ' fav' : ''); button.innerHTML = `<img src="${root+slide[0]}" alt=""><span>${String(i+1).padStart(2,'0')}</span>`; button.onclick = () => show(i); thumbs.append(button);
     });
     function show(index) {
       current = (index + slides.length) % slides.length;
+      document.querySelectorAll('.photo-backdrop').forEach((el,i) => el.classList.toggle('active', i === current));
       document.querySelectorAll('.photo').forEach((el,i) => el.classList.toggle('active', i === current));
       document.querySelectorAll('.thumb').forEach((el,i) => el.classList.toggle('active', i === current));
       const n = String(current + 1).padStart(2,'0'); number.textContent = `Opción ${n}`; counter.textContent = `${n} / ${slides.length}`;
