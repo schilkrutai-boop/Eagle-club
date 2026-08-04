@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0908">
+  <title>Eagle Club — Opciones de portada</title>
+  <style>
+    :root { color-scheme: dark; --wine:#6d1831; --ink:#0a0908; --paper:#f4f0e8; --muted:#b8b0a5; }
+    * { box-sizing:border-box; }
+    html, body { margin:0; min-height:100%; background:var(--ink); color:var(--paper); font-family:Arial, Helvetica, sans-serif; }
+    button { font:inherit; }
+    .app { min-height:100svh; display:grid; grid-template-rows:auto minmax(0,1fr) auto; }
+    header { height:84px; display:flex; align-items:center; justify-content:space-between; gap:24px; padding:16px clamp(18px,4vw,64px); border-bottom:1px solid #ffffff20; }
+    header img { width:72px; height:52px; object-fit:contain; }
+    .heading { flex:1; }
+    .eyebrow { margin:0 0 5px; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); }
+    h1 { margin:0; font-family:Georgia, 'Times New Roman', serif; font-size:clamp(20px,2.4vw,32px); font-weight:400; }
+    .counter { min-width:76px; text-align:right; font-size:13px; letter-spacing:.12em; color:var(--muted); }
+    .stage { position:relative; min-height:0; overflow:hidden; background:#050505; }
+    .photo { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transform:scale(1.01); transition:opacity .45s ease, transform 1.1s ease; }
+    .photo.active { opacity:1; transform:scale(1); }
+    .shade { position:absolute; inset:0; pointer-events:none; background:linear-gradient(180deg,#00000012 45%,#000000d9 100%); }
+    .caption { position:absolute; z-index:2; left:clamp(22px,5vw,76px); right:clamp(22px,5vw,76px); bottom:clamp(24px,5vw,66px); max-width:720px; }
+    .number { margin-bottom:10px; font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:#ded6c9; }
+    .title { margin:0 0 8px; font-family:Georgia, 'Times New Roman', serif; font-size:clamp(32px,5vw,68px); line-height:.95; font-weight:400; }
+    .description { margin:0; max-width:540px; color:#ddd6cb; font-size:clamp(13px,1.3vw,16px); line-height:1.45; }
+    .nav { position:absolute; z-index:3; top:50%; width:52px; height:52px; border:1px solid #ffffff60; border-radius:50%; background:#09080780; color:white; cursor:pointer; backdrop-filter:blur(8px); transform:translateY(-50%); transition:.2s ease; }
+    .nav:hover { background:var(--wine); border-color:var(--wine); }
+    .prev { left:clamp(12px,2vw,30px); } .next { right:clamp(12px,2vw,30px); }
+    .favorite { position:absolute; z-index:3; top:22px; right:clamp(18px,3vw,42px); border:1px solid #ffffff55; background:#0908078c; color:white; padding:11px 15px; cursor:pointer; letter-spacing:.08em; font-size:11px; text-transform:uppercase; backdrop-filter:blur(8px); }
+    .favorite.selected { background:var(--wine); border-color:var(--wine); }
+    footer { padding:14px clamp(18px,4vw,64px) 18px; border-top:1px solid #ffffff20; }
+    .footer-top { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:12px; }
+    .hint { margin:0; color:var(--muted); font-size:11px; letter-spacing:.08em; }
+    .copy { border:0; background:transparent; color:#eee6dc; padding:6px 0; cursor:pointer; font-size:11px; letter-spacing:.1em; text-transform:uppercase; }
+    .thumbs { display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; scrollbar-width:thin; scroll-behavior:smooth; }
+    .thumb { position:relative; flex:0 0 104px; height:59px; padding:0; border:1px solid transparent; background:#181614; cursor:pointer; opacity:.5; overflow:hidden; transition:.2s ease; }
+    .thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+    .thumb span { position:absolute; left:5px; bottom:4px; min-width:19px; height:19px; padding:3px; background:#000b; font-size:10px; }
+    .thumb.active { opacity:1; border-color:#fff; }
+    .thumb.fav::after { content:'★'; position:absolute; top:4px; right:5px; color:#fff; text-shadow:0 1px 4px #000; }
+    @media (max-width:700px) {
+      header { height:72px; padding-block:12px; } header img { width:56px; height:42px; }
+      .counter { min-width:54px; } .stage { min-height:58svh; }
+      .nav { width:42px; height:42px; top:45%; } .caption { bottom:28px; }
+      .description { max-width:82%; } .favorite { top:14px; right:14px; }
+      .hint { display:none; } .footer-top { justify-content:flex-end; margin-bottom:8px; }
+      footer { padding-inline:12px; } .thumb { flex-basis:88px; height:50px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <img src="../media/eagleclub-logo-stacked.png" alt="Eagle Club">
+      <div class="heading"><p class="eyebrow">Selección visual · Home</p><h1>Opciones de portada</h1></div>
+      <div class="counter" id="counter">01 / 20</div>
+    </header>
+    <section class="stage" id="stage" aria-live="polite">
+      <div id="photos"></div><div class="shade"></div>
+      <button class="nav prev" id="prev" aria-label="Anterior">←</button>
+      <button class="nav next" id="next" aria-label="Siguiente">→</button>
+      <button class="favorite" id="favorite">☆ Marcar favorita</button>
+      <div class="caption"><div class="number" id="number"></div><h2 class="title" id="title"></h2><p class="description" id="description"></p></div>
+    </section>
+    <footer>
+      <div class="footer-top"><p class="hint">Usa ← → o desliza para navegar · Puedes marcar varias favoritas</p><button class="copy" id="copy">Copiar selección</button></div>
+      <div class="thumbs" id="thumbs"></div>
+    </footer>
+  </main>
+  <script>
+    const slides = [
+      ['option-01-current.jpg','Actual','La fotografía que está hoy publicada en el inicio.'],
+      ['option-02-grand-bay.jpg','The Grand Bay','El simulador como protagonista: arquitectura, amplitud y tecnología.'],
+      ['option-03-members-lounge.jpg','Members Lounge','Una mirada más cálida al club como espacio privado para quedarse.'],
+      ['option-04-golfer-swing.jpg','The Swing','Acción y golf en una composición limpia y cinematográfica.'],
+      ['option-05-social-night.jpg','Social Night','El club como punto de encuentro para jugar, compartir y celebrar.'],
+      ['option-06-technology.jpg','Precision','Un enfoque cercano en la tecnología y la precisión del juego.'],
+      ['option-07-reception.jpg','The Arrival','La primera impresión: diseño, exclusividad y hospitalidad.'],
+      ['option-08-bar-and-bays.jpg','Bar & Bays','La experiencia completa: bar, lounge y golf en un mismo lugar.'],
+      ['option-09-after-work.jpg','After Work','Una propuesta aspiracional para desconectarse después de la oficina.'],
+      ['option-10-dark-bay.jpg','Pure Golf','Minimalista y misteriosa; toda la atención puesta en el simulador.'],
+      ['option-11-warm-architecture.jpg','Warm Clubhouse','Materiales nobles y una atmósfera contemporánea y acogedora.'],
+      ['option-12-burgundy-lounge.jpg','The Burgundy Room','Una identidad más íntima, nocturna y reconocible para Eagle Club.'],
+      ['option-13-woman-golfer.jpg','Focused','Una imagen deportiva, moderna e inclusiva centrada en la jugadora.'],
+      ['option-14-corporate-event.jpg','Team Night','Eagle Club como escenario para equipos, eventos y celebraciones.'],
+      ['option-15-gastronomy.jpg','Golf & Gastronomy','La cocina y la coctelería como parte esencial de la experiencia.'],
+      ['option-16-putting-lounge.jpg','Practice Lounge','Una visión más amplia del entrenamiento y la vida dentro del club.'],
+      ['option-17-panoramic-club.jpg','The Club','La propuesta completa en una gran vista panorámica del espacio.'],
+      ['option-18-ball-detail.jpg','The Detail','Una portada gráfica y sofisticada basada en el gesto esencial del golf.'],
+      ['option-19-santiago-view.jpg','Santiago Blue Hour','Golf indoor conectado visualmente con Santiago y la cordillera.'],
+      ['option-20-passage.jpg','The Passage','Una llegada cinematográfica que genera curiosidad y anticipación.']
+    ];
+    const root = '../media/hero-options/';
+    const photos = document.querySelector('#photos'), thumbs = document.querySelector('#thumbs');
+    const title = document.querySelector('#title'), description = document.querySelector('#description');
+    const number = document.querySelector('#number'), counter = document.querySelector('#counter');
+    const favorite = document.querySelector('#favorite');
+    let current = 0, startX = 0;
+    const favorites = new Set(JSON.parse(localStorage.getItem('eagle-hero-favorites') || '[]'));
+    slides.forEach((slide, i) => {
+      const image = new Image(); image.src = root + slide[0]; image.alt = slide[1]; image.className = 'photo'; if (!i) image.classList.add('active'); photos.append(image);
+      const button = document.createElement('button'); button.className = 'thumb' + (!i ? ' active' : '') + (favorites.has(i) ? ' fav' : ''); button.innerHTML = `<img src="${root+slide[0]}" alt=""><span>${String(i+1).padStart(2,'0')}</span>`; button.onclick = () => show(i); thumbs.append(button);
+    });
+    function show(index) {
+      current = (index + slides.length) % slides.length;
+      document.querySelectorAll('.photo').forEach((el,i) => el.classList.toggle('active', i === current));
+      document.querySelectorAll('.thumb').forEach((el,i) => el.classList.toggle('active', i === current));
+      const n = String(current + 1).padStart(2,'0'); number.textContent = `Opción ${n}`; counter.textContent = `${n} / 20`;
+      title.textContent = slides[current][1]; description.textContent = slides[current][2];
+      favorite.textContent = favorites.has(current) ? '★ Favorita' : '☆ Marcar favorita'; favorite.classList.toggle('selected', favorites.has(current));
+      document.querySelectorAll('.thumb')[current].scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+    }
+    document.querySelector('#prev').onclick = () => show(current - 1); document.querySelector('#next').onclick = () => show(current + 1);
+    favorite.onclick = () => { favorites.has(current) ? favorites.delete(current) : favorites.add(current); localStorage.setItem('eagle-hero-favorites', JSON.stringify([...favorites])); document.querySelectorAll('.thumb')[current].classList.toggle('fav', favorites.has(current)); show(current); };
+    document.querySelector('#copy').onclick = async (event) => { const text = favorites.size ? `Mis opciones favoritas para la portada de Eagle Club: ${[...favorites].sort((a,b)=>a-b).map(i=>`${String(i+1).padStart(2,'0')} — ${slides[i][1]}`).join(', ')}` : 'Aún no he marcado opciones favoritas.'; await navigator.clipboard.writeText(text); event.currentTarget.textContent='Selección copiada ✓'; setTimeout(()=>event.currentTarget.textContent='Copiar selección',1800); };
+    document.addEventListener('keydown', e => { if (e.key === 'ArrowLeft') show(current - 1); if (e.key === 'ArrowRight') show(current + 1); });
+    document.querySelector('#stage').addEventListener('touchstart', e => startX = e.changedTouches[0].clientX, {passive:true});
+    document.querySelector('#stage').addEventListener('touchend', e => { const dx=e.changedTouches[0].clientX-startX; if(Math.abs(dx)>50) show(current+(dx<0?1:-1)); }, {passive:true});
+    show(0);
+  </script>
+</body>
+</html>
