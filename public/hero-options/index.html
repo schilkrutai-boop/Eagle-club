@@ -54,8 +54,8 @@
   <main class="app">
     <header>
       <img src="../media/eagleclub-logo-stacked.png" alt="Eagle Club">
-      <div class="heading"><p class="eyebrow">Selección visual · Home</p><h1>Opciones de portada</h1></div>
-      <div class="counter" id="counter">01 / 20</div>
+      <div class="heading"><p class="eyebrow">Selección visual · Home</p><h1>40 opciones de portada</h1></div>
+      <div class="counter" id="counter">01 / 40</div>
     </header>
     <section class="stage" id="stage" aria-live="polite">
       <div id="photos"></div><div class="shade"></div>
@@ -72,25 +72,45 @@
   <script>
     const slides = [
       ['option-01-current.jpg','Actual','La fotografía que está hoy publicada en el inicio.'],
-      ['option-02-grand-bay.jpg','The Grand Bay','El simulador como protagonista: arquitectura, amplitud y tecnología.'],
-      ['option-03-members-lounge.jpg','Members Lounge','Una mirada más cálida al club como espacio privado para quedarse.'],
-      ['option-04-golfer-swing.jpg','The Swing','Acción y golf en una composición limpia y cinematográfica.'],
-      ['option-05-social-night.jpg','Social Night','El club como punto de encuentro para jugar, compartir y celebrar.'],
-      ['option-06-technology.jpg','Precision','Un enfoque cercano en la tecnología y la precisión del juego.'],
-      ['option-07-reception.jpg','The Arrival','La primera impresión: diseño, exclusividad y hospitalidad.'],
-      ['option-08-bar-and-bays.jpg','Bar & Bays','La experiencia completa: bar, lounge y golf en un mismo lugar.'],
-      ['option-09-after-work.jpg','After Work','Una propuesta aspiracional para desconectarse después de la oficina.'],
-      ['option-10-dark-bay.jpg','Pure Golf','Minimalista y misteriosa; toda la atención puesta en el simulador.'],
-      ['option-11-warm-architecture.jpg','Warm Clubhouse','Materiales nobles y una atmósfera contemporánea y acogedora.'],
-      ['option-12-burgundy-lounge.jpg','The Burgundy Room','Una identidad más íntima, nocturna y reconocible para Eagle Club.'],
-      ['option-13-woman-golfer.jpg','Focused','Una imagen deportiva, moderna e inclusiva centrada en la jugadora.'],
-      ['option-14-corporate-event.jpg','Team Night','Eagle Club como escenario para equipos, eventos y celebraciones.'],
-      ['option-15-gastronomy.jpg','Golf & Gastronomy','La cocina y la coctelería como parte esencial de la experiencia.'],
-      ['option-16-putting-lounge.jpg','Practice Lounge','Una visión más amplia del entrenamiento y la vida dentro del club.'],
-      ['option-17-panoramic-club.jpg','The Club','La propuesta completa en una gran vista panorámica del espacio.'],
-      ['option-18-ball-detail.jpg','The Detail','Una portada gráfica y sofisticada basada en el gesto esencial del golf.'],
-      ['option-19-santiago-view.jpg','Santiago Blue Hour','Golf indoor conectado visualmente con Santiago y la cordillera.'],
-      ['option-20-passage.jpg','The Passage','Una llegada cinematográfica que genera curiosidad y anticipación.']
+      ['option-02-grand-bay-v2.jpg','The Grand Bay','El simulador como protagonista, con señalética Eagle Club integrada.'],
+      ['option-03-members-lounge-v2.jpg','Members Lounge','Una mirada cálida al club privado con placa de marca en latón.'],
+      ['option-04-golfer-swing-v2.jpg','The Swing','Acción deportiva y una identidad visual protagonista.'],
+      ['option-05-social-night-v2.jpg','Social Night','Juego, amigos y marca en una atmósfera social nocturna.'],
+      ['option-06-technology-v2.jpg','Precision','Tecnología y detalle con el emblema aplicado al equipamiento.'],
+      ['option-07-reception-v2.jpg','The Arrival','Una recepción de marca clara, elegante y memorable.'],
+      ['option-08-bar-and-bays-v2.jpg','Bar & Bays','Bar, lounge y golf con identidad grabada en metal.'],
+      ['option-09-after-work-v2.jpg','After Work','Una propuesta ejecutiva con branding textil en burdeo.'],
+      ['option-10-dark-bay-v2.jpg','Pure Golf','Minimalismo y una proyección luminosa del emblema Eagle Club.'],
+      ['option-11-warm-architecture-v2.jpg','Warm Clubhouse','Travertino, madera y marca tallada en la arquitectura.'],
+      ['option-12-burgundy-lounge-v2.jpg','The Burgundy Room','Una identidad íntima y nocturna centrada en el color de marca.'],
+      ['option-13-woman-golfer-v2.jpg','Focused','Una imagen deportiva y moderna con señalética vertical.'],
+      ['option-14-corporate-event-v2.jpg','Team Night','Eagle Club como escenario para equipos, eventos y celebraciones.'],
+      ['option-15-gastronomy-v2.jpg','Golf & Gastronomy','La experiencia culinaria con aplicaciones sutiles de marca.'],
+      ['option-16-putting-lounge-v2.jpg','Practice Lounge','Entrenamiento y escultura de marca en un gran putting green.'],
+      ['option-17-panoramic-club-v2.jpg','The Club','La propuesta completa con un emblema suspendido como punto focal.'],
+      ['option-18-ball-detail-v2.jpg','The Detail','Una portada gráfica con el emblema aplicado directamente a la pelota.'],
+      ['option-19-santiago-view-v2.jpg','Santiago Blue Hour','Golf indoor, ciudad, cordillera y marca sobre el cristal.'],
+      ['option-20-passage-v2.jpg','The Passage','Una llegada cinematográfica guiada por el emblema iluminado.'],
+      ['option-21-rooftop-santiago.jpg','Rooftop Santiago','Un pabellón de golf sobre la ciudad al atardecer.'],
+      ['option-22-vineyard.jpg','Chilean Vineyard','Arquitectura contemporánea conectada con una viña chilena.'],
+      ['option-23-japanese-minimal.jpg','Zen Bay','Calma, madera clara y paisajismo japonés alrededor del juego.'],
+      ['option-24-industrial-loft.jpg','Industrial Loft','Ladrillo, acero y energía social en un gran loft urbano.'],
+      ['option-25-performance-lab.jpg','Performance Lab','Una visión luminosa y tecnológica del entrenamiento de alto nivel.'],
+      ['option-26-art-deco.jpg','Art Deco Night','Una interpretación glamorosa, geométrica y nocturna del club.'],
+      ['option-27-botanical.jpg','Botanical Club','Golf indoor dentro de un invernadero sofisticado y lleno de luz.'],
+      ['option-28-wine-cellar.jpg','Wine Cellar','Golf, vino chileno y hospitalidad dentro de una cava contemporánea.'],
+      ['option-29-library.jpg','The Library','Un club silencioso y culto con el simulador oculto entre libros.'],
+      ['option-30-private-cinema.jpg','Private Cinema','El juego convertido en espectáculo dentro de una sala de cine.'],
+      ['option-31-art-gallery.jpg','Golf as Art','Una instalación de golf en una galería contemporánea.'],
+      ['option-32-bunker.jpg','The Bunker','Hormigón brutalista, niebla y una experiencia deportiva intensa.'],
+      ['option-33-black-marble.jpg','Black Marble','Una suite escultórica, minimalista y completamente arquitectónica.'],
+      ['option-34-scandinavian.jpg','Daylight Club','Una alternativa clara, fresca y cercana con diseño escandinavo.'],
+      ['option-35-chefs-table.jpg','Chef’s Table','Cocina abierta y golf conviviendo en una experiencia dinámica.'],
+      ['option-36-trophy-vault.jpg','Trophy Vault','Historia del golf y objetos de colección presentados como joyas.'],
+      ['option-37-morning-coffee.jpg','Morning Club','La experiencia Eagle Club desde el café de primera hora.'],
+      ['option-38-locker-room.jpg','Members’ Locker Room','Una imagen editorial centrada en pertenencia y preparación.'],
+      ['option-39-andes-chalet.jpg','Andes Chalet','Un refugio invernal de piedra y madera frente a la cordillera.'],
+      ['option-40-tournament-arena.jpg','The Final','Eagle Club convertido en una gran final con público y espectáculo.']
     ];
     const root = '../media/hero-options/';
     const photos = document.querySelector('#photos'), thumbs = document.querySelector('#thumbs');
@@ -107,7 +127,7 @@
       current = (index + slides.length) % slides.length;
       document.querySelectorAll('.photo').forEach((el,i) => el.classList.toggle('active', i === current));
       document.querySelectorAll('.thumb').forEach((el,i) => el.classList.toggle('active', i === current));
-      const n = String(current + 1).padStart(2,'0'); number.textContent = `Opción ${n}`; counter.textContent = `${n} / 20`;
+      const n = String(current + 1).padStart(2,'0'); number.textContent = `Opción ${n}`; counter.textContent = `${n} / ${slides.length}`;
       title.textContent = slides[current][1]; description.textContent = slides[current][2];
       favorite.textContent = favorites.has(current) ? '★ Favorita' : '☆ Marcar favorita'; favorite.classList.toggle('selected', favorites.has(current));
       document.querySelectorAll('.thumb')[current].scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
