@@ -9,7 +9,7 @@ import HeroZoom from "@/components/site/HeroZoom";
 import { montserrat, formata } from "./fonts";
 import "./home.css";
 
-import heroFlag from "@/public/media/site/hero-flag.jpg";
+import heroIndoor from "@/public/media/hero-options/option-10-dark-bay-v2.jpg";
 import trioExecutive from "@/public/media/site/trio-executive.jpg";
 import trioBag from "@/public/media/site/trio-bag.jpg";
 import trioWhisky from "@/public/media/site/trio-whisky.jpg";
@@ -53,9 +53,9 @@ export default function HomePage() {
         <div className="site-hero-media">
           <HeroZoom>
             <Image
-              src={heroFlag}
+              src={heroIndoor}
               placeholder="blur"
-              alt="Bandera de Eagle Club en el green"
+              alt="Bahía de golf indoor de Eagle Club"
               loading="eager"
               fetchPriority="high"
               sizes="100vw"
