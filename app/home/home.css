@@ -352,6 +352,26 @@
     linear-gradient(180deg, rgba(21, 0, 0, 0) 55%, var(--ec-espresso) 96%);
 }
 
+/* En teléfono, el recorte prioriza la pantalla y la bahía. El logo ya vive en
+   el header, por lo que evitamos dejar al centro el muro oscuro entre ambos. */
+@media (max-width: 720px) {
+  .site-hero {
+    min-height: 0;
+    max-height: none;
+  }
+
+  .site-hero-media img {
+    object-position: 74% 50%;
+  }
+
+  /* Conserva el encuadre y evita composición GPU continua en móviles. */
+  .site-hero-zoom {
+    animation: none;
+    transform: none;
+    will-change: auto;
+  }
+}
+
 /* ============================================================
    SECCIONES
    ============================================================ */
