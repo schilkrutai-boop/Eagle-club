@@ -320,6 +320,12 @@
   inset: 0;
 }
 
+.site-hero-media picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .site-hero-media img,
 .site-hero-media video {
   width: 100%;
@@ -352,19 +358,15 @@
     linear-gradient(180deg, rgba(21, 0, 0, 0) 55%, var(--ec-espresso) 96%);
 }
 
-/* En teléfono, el recorte prioriza la pantalla y la bahía. El logo ya vive en
-   el header, por lo que evitamos dejar al centro el muro oscuro entre ambos. */
+/* En teléfono se sirve un recorte vertical dedicado (art direction en
+   page.tsx), ya centrado en la pantalla del simulador. */
 @media (max-width: 720px) {
   .site-hero {
     min-height: 0;
     max-height: none;
   }
 
-  .site-hero-media img {
-    object-position: 74% 50%;
-  }
-
-  /* Conserva el encuadre y evita composición GPU continua en móviles. */
+  /* Sin zoom Ken Burns: evita composición GPU continua en móviles. */
   .site-hero-zoom {
     animation: none;
     transform: none;

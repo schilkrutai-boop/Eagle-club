@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import SiteHeader from "@/components/site/SiteHeader";
 import Reveal from "@/components/site/Reveal";
 import Parallax from "@/components/site/Parallax";
@@ -10,6 +10,7 @@ import { montserrat, formata } from "./fonts";
 import "./home.css";
 
 import heroIndoor from "@/public/media/hero-options/option-10-dark-bay-v2.jpg";
+import heroIndoorMobile from "@/public/media/site/hero-indoor-mobile.jpg";
 import trioExecutive from "@/public/media/site/trio-executive.jpg";
 import trioBag from "@/public/media/site/trio-bag.jpg";
 import trioWhisky from "@/public/media/site/trio-whisky.jpg";
@@ -41,6 +42,19 @@ const MAPS_URL =
   "https://maps.google.com/?q=Isidora+Goyenechea+3000,+Las+Condes,+Santiago";
 
 export default function HomePage() {
+  // Art direction del hero: la foto es apaisada (1672x941) y en un teléfono
+  // vertical el object-fit: cover la estiraría ~4x (borrosa). Para pantallas
+  // angostas servimos un recorte vertical dedicado vía <picture>.
+  const heroAlt = "Bahía de golf indoor de Eagle Club";
+  const {
+    props: { srcSet: heroMobileSet },
+  } = getImageProps({ alt: heroAlt, sizes: "100vw", src: heroIndoorMobile });
+  const { props: heroProps } = getImageProps({
+    alt: heroAlt,
+    sizes: "100vw",
+    src: heroIndoor,
+  });
+
   return (
     <div
       id="inicio"
@@ -52,15 +66,16 @@ export default function HomePage() {
       <section className="site-hero" aria-label="Eagle Club">
         <div className="site-hero-media">
           <HeroZoom>
-            <Image
-              src={heroIndoor}
-              placeholder="blur"
-              alt="Bahía de golf indoor de Eagle Club"
-              loading="eager"
-              fetchPriority="high"
-              sizes="100vw"
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            />
+            <picture>
+              <source media="(max-width: 720px)" srcSet={heroMobileSet} sizes="100vw" />
+              {/* eslint-disable-next-line jsx-a11y/alt-text -- alt viene en heroProps */}
+              <img
+                {...heroProps}
+                loading="eager"
+                fetchPriority="high"
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+            </picture>
           </HeroZoom>
           <div className="site-hero-veil" />
         </div>
