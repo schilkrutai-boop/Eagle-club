@@ -50,6 +50,7 @@ export default function HomePage() {
               alt="Bahía de golf indoor de Eagle Club"
               loading="eager"
               fetchPriority="high"
+              quality={88}
               sizes="100vw"
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
