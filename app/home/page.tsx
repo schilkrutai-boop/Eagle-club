@@ -137,8 +137,8 @@ export default function HomePage() {
                 <div className="site-index-term">Academia</div>
                 <p className="site-index-desc">
                   Clases individuales y programas con instructores, sobre los
-                  datos reales de tu swing. Tu progreso queda registrado en tu
-                  perfil de socio, sesión a sesión.
+                  datos reales de tu swing. Tu progreso queda registrado sesión
+                  a sesión.
                 </p>
               </div>
             </div>
