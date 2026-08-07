@@ -4,11 +4,10 @@ import SiteHeader from "@/components/site/SiteHeader";
 import Reveal from "@/components/site/Reveal";
 import DockTrio from "@/components/site/DockTrio";
 import ClubForm from "@/components/site/ClubForm";
-import HeroZoom from "@/components/site/HeroZoom";
+import SiteHeroVideo from "@/components/site/SiteHeroVideo";
 import { montserrat, formata } from "./fonts";
 import "./home.css";
 
-import heroIndoor from "@/public/media/hero-options/option-10-dark-bay-v2.jpg";
 import trioExecutive from "@/public/media/site/trio-executive.jpg";
 import trioBag from "@/public/media/site/trio-bag.jpg";
 import trioWhisky from "@/public/media/site/trio-whisky.jpg";
@@ -39,21 +38,10 @@ export default function HomePage() {
     >
       <SiteHeader />
 
-      {/* ============ HERO ============ */}
+      {/* ============ HERO — video a sangre ============ */}
       <section className="site-hero" aria-label="Eagle Club">
         <div className="site-hero-media">
-          <HeroZoom>
-            <Image
-              src={heroIndoor}
-              placeholder="blur"
-              alt="Bahía de golf indoor de Eagle Club"
-              loading="eager"
-              fetchPriority="high"
-              quality={88}
-              sizes="100vw"
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            />
-          </HeroZoom>
+          <SiteHeroVideo poster="/media/hero-poster.jpg" />
           <div className="site-hero-veil" />
         </div>
       </section>
@@ -295,54 +283,124 @@ export default function HomePage() {
               style={{ marginTop: "clamp(28px, 2.6vw, 48px)" }}
             />
           </Reveal>
+
           <Reveal delay={200}>
-            <p className="site-body" style={{ marginTop: "clamp(30px, 3vw, 56px)" }}>
-              Un club privado en el corazón de Las Condes. Membresías
-              limitadas, beneficios exclusivos y una comunidad que comparte una
-              misma forma de entender el juego.
+            <p className="site-quote" style={{ marginTop: "clamp(34px, 3.4vw, 62px)" }}>
+              Hay lugares a los que se asiste.
+              <br />
+              <span>Y hay lugares a los que se pertenece.</span>
             </p>
           </Reveal>
+          <Reveal delay={260}>
+            <p className="site-body" style={{ marginTop: "clamp(26px, 2.6vw, 44px)" }}>
+              La membresía de Eagle Club nace para quienes entienden que el golf
+              es mucho más que un deporte y buscan vivirlo en un entorno donde
+              cada detalle ha sido cuidadosamente pensado.
+            </p>
+          </Reveal>
+
           <Reveal>
-            <div className="site-index" style={{ maxWidth: 880, marginInline: "auto" }}>
-              <div className="site-index-row">
-                <div className="site-index-term">Horas incluidas</div>
-                <p className="site-index-desc">
-                  Cada membresía incluye <strong>horas de bahía todos los
-                  meses</strong>, con acceso preferente para reservar antes que
-                  el público general.
+            <div style={{ maxWidth: 980, marginInline: "auto" }}>
+              <h2 className="site-h2" style={{ marginTop: "clamp(44px, 4.4vw, 84px)" }}>
+                Membresía Fundadores
+              </h2>
+
+              <div className="site-plan">
+                <div>
+                  <p className="site-plan-label">Valor mensual</p>
+                  <div className="site-plan-price">$250.000</div>
+                  <p className="site-plan-per">Por socio</p>
+                </div>
+                <p className="site-plan-desc">
+                  La <strong>Membresía Fundadores</strong> te entrega acceso
+                  preferente a una experiencia diseñada para quienes viven el
+                  golf con un estándar diferente.
                 </p>
               </div>
-              <div className="site-index-row">
-                <div className="site-index-term">Cuenta de socio</div>
-                <p className="site-index-desc">
-                  Firma tus consumos con tu número de socio y paga todo junto a
-                  fin de mes. Sin sacar la tarjeta en cada visita.
-                </p>
+
+              <div className="site-benefits">
+                <div className="site-benefit">
+                  <h3>Acceso al club</h3>
+                  <p>
+                    Disfruta de nuestros simuladores de última generación con la
+                    flexibilidad que necesitas.
+                  </p>
+                  <ul>
+                    <li>
+                      <strong>6 horas mensuales de bahía</strong>, con reserva
+                      previa y disponibles en cualquier horario.
+                    </li>
+                    <li>
+                      10% de descuento en horas adicionales desde la séptima
+                      hora.
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="site-benefit">
+                  <h3>Coaching personalizado</h3>
+                  <p>
+                    Perfecciona tu juego con el programa{" "}
+                    <strong>APEX Pro Coaching</strong>, que incluye:
+                  </p>
+                  <ul>
+                    <li>4 análisis de swing al mes.</li>
+                    <li>Feedback personalizado mediante video.</li>
+                    <li>Comentarios escritos y notas de audio.</li>
+                    <li>
+                      Drills y plan de entrenamiento adaptados a tus objetivos.
+                    </li>
+                    <li>
+                      1 clase presencial mensual junto a{" "}
+                      <strong>Javier Ferreira</strong>.
+                    </li>
+                    <li>Acceso a la plataforma Upgame.</li>
+                  </ul>
+                </div>
+
+                <div className="site-benefit">
+                  <h3>Privilegios de la membresía</h3>
+                  <p>
+                    Beneficios especialmente seleccionados para los miembros de
+                    Eagle Club:
+                  </p>
+                  <ul>
+                    <li>
+                      Descuentos preferenciales en{" "}
+                      <strong>Viña Concha y Toro</strong>.
+                    </li>
+                    <li>
+                      Acceso exclusivo a experiencias en <strong>Icons</strong>.
+                    </li>
+                    <li>
+                      Ventajas especiales en <strong>Brooks Brothers</strong>.
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="site-benefit">
+                  <h3>Al interior de Eagle Club</h3>
+                  <ul>
+                    <li>10% de descuento en alimentos y bebidas.</li>
+                    <li>10% de descuento en merchandising.</li>
+                    <li>Casilla personal para guardar tus palos.</li>
+                  </ul>
+                </div>
               </div>
-              <div className="site-index-row">
-                <div className="site-index-term">Invitados</div>
-                <p className="site-index-desc">
-                  Trae a quienes quieras a tu bahía y comparte los beneficios
-                  del club con tus invitados.
-                </p>
-              </div>
-              <div className="site-index-row">
-                <div className="site-index-term">Torneos y ligas</div>
-                <p className="site-index-desc">
-                  Competencias internas con ranking, y tus estadísticas de juego
-                  registradas en tu perfil para seguir tu progreso.
-                </p>
-              </div>
+
+              <p className="site-scarcity">
+                Una vez alcanzados los 120 socios, el club adoptará un modelo de
+                membresía privada y el acceso a nuevos miembros quedará sujeto a
+                disponibilidad.
+              </p>
             </div>
           </Reveal>
 
           <Reveal>
-            <div style={{ marginTop: "clamp(40px, 4vw, 80px)" }}>
+            <div style={{ marginTop: "clamp(40px, 4vw, 76px)" }}>
               <p className="site-body">
-                Las membresías son limitadas y los primeros cupos se abrirán a
-                quienes estén en la lista.
-                <br />
-                Déjanos tus datos y te contactaremos con la información completa.
+                Déjanos tus datos y te contactaremos con toda la información
+                para ser parte de la Membresía Fundadores.
               </p>
             </div>
           </Reveal>
