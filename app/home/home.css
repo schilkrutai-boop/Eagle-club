@@ -603,71 +603,117 @@
   );
 }
 
-.site-collage {
-  position: relative;
-  margin-top: clamp(40px, 5vw, 110px);
-}
-
-@media (min-width: 901px) {
-  .site-collage {
-    aspect-ratio: 1920 / 2220;
-  }
-
-  .site-collage-tile {
-    position: absolute;
-  }
-
-  .site-collage-tile--interior {
-    left: 0;
-    top: 19.5%;
-    width: 50.1%;
-    height: 53.9%;
-    z-index: 1;
-  }
-
-  .site-collage-tile--cuadro {
-    left: 33.9%;
-    top: 0.7%;
-    width: 32.6%;
-    height: 47.9%;
-    z-index: 2;
-    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.5);
-  }
-
-  .site-collage-tile--lifestyle {
-    left: 23.8%;
-    top: 61.1%;
-    width: 76.2%;
-    height: 38.8%;
-    z-index: 3;
+/* En teléfono la sección es más corta: el degradado debe llegar al espresso
+   antes de que empiece el titular, o el texto claro queda sobre fondo claro. */
+@media (max-width: 720px) {
+  .site-grad {
+    background: linear-gradient(
+      180deg,
+      var(--ec-cream) 0%,
+      #63504a 5%,
+      #251111 9%,
+      var(--ec-espresso) 13%
+    );
   }
 }
 
-.site-collage-tile {
-  overflow: hidden;
+/* --- índice de la experiencia: filas término + descripción --- */
+.site-index {
+  margin-top: clamp(44px, 4.5vw, 96px);
+  text-align: left;
 }
 
-.site-collage-tile img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.site-index-row {
+  display: grid;
+  grid-template-columns: minmax(150px, 240px) 1fr;
+  gap: clamp(18px, 3vw, 64px);
+  padding: clamp(20px, 2vw, 34px) 0;
+  border-top: 1px solid rgba(201, 150, 57, 0.22);
 }
 
-@media (max-width: 900px) {
-  .site-collage {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
+.site-index-row:last-child {
+  border-bottom: 1px solid rgba(201, 150, 57, 0.22);
+}
+
+.site-index-term {
+  font-family: var(--font-formata), sans-serif;
+  font-size: clamp(12px, 0.85vw, 16px);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ec-gold-b);
+  padding-top: 4px;
+}
+
+.site-index-desc {
+  font-weight: 300;
+  font-size: clamp(14px, 0.85vw, 16.5px);
+  line-height: 1.85;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 251, 0.88);
+  margin: 0;
+  max-width: 62ch;
+}
+
+.site-index-desc strong {
+  font-weight: 500;
+  color: var(--ec-text);
+}
+
+@media (max-width: 720px) {
+  .site-index-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+/* --- cómo funciona: tres pasos reales --- */
+.site-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(28px, 3.5vw, 72px);
+  margin-top: clamp(44px, 4.5vw, 96px);
+  text-align: left;
+}
+
+.site-step-num {
+  font-weight: 100;
+  font-size: clamp(40px, 3.4vw, 64px);
+  line-height: 1;
+  color: var(--ec-gold-b);
+  letter-spacing: 0.04em;
+}
+
+.site-step h3 {
+  font-family: var(--font-formata), sans-serif;
+  font-weight: 400;
+  font-size: clamp(13px, 0.91vw, 17px);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ec-text);
+  margin: 18px 0 12px;
+}
+
+.site-step p {
+  font-weight: 300;
+  font-size: clamp(13.5px, 0.8vw, 15.5px);
+  line-height: 1.85;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 251, 0.78);
+  margin: 0;
+}
+
+@media (max-width: 720px) {
+  .site-steps {
+    grid-template-columns: 1fr;
+    gap: 34px;
   }
 
-  .site-collage-tile {
-    aspect-ratio: 4 / 3;
+  .site-step-num {
+    font-size: 40px;
   }
 
-  .site-collage-tile--cuadro {
-    aspect-ratio: 3 / 4;
-    width: 78%;
-    align-self: center;
+  .site-step h3 {
+    margin-top: 10px;
   }
 }
 

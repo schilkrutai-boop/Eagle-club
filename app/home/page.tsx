@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import SiteHeader from "@/components/site/SiteHeader";
 import Reveal from "@/components/site/Reveal";
-import Parallax from "@/components/site/Parallax";
 import DockTrio from "@/components/site/DockTrio";
 import ClubForm from "@/components/site/ClubForm";
 import HeroZoom from "@/components/site/HeroZoom";
@@ -18,13 +17,7 @@ import isotipoCream from "@/public/media/site/isotipo-cream.png";
 import practicaTrackman from "@/public/media/site/practica-trackman.jpg";
 import practicaLounge from "@/public/media/site/practica-lounge.jpg";
 import practicaCafe from "@/public/media/site/practica-cafe.jpg";
-import entornoInterior from "@/public/media/site/entorno-interior.jpg";
-import entornoCuadro from "@/public/media/site/entorno-cuadro.jpg";
-import entornoLifestyle from "@/public/media/site/entorno-lifestyle.jpg";
 import eventosMartini from "@/public/media/site/eventos-martini.jpg";
-import ubiHotel from "@/public/media/site/ubi-hotel.jpg";
-import ubiRestaurant from "@/public/media/site/ubi-restaurant.jpg";
-import ubiParking from "@/public/media/site/ubi-parking.jpg";
 import ubiMapa from "@/public/media/site/ubi-mapa.jpg";
 import logoStacked from "@/public/media/eagleclub-logo-stacked.png";
 
@@ -194,8 +187,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ============ EL ENTORNO (degradado + collage) ============ */}
-      <section className="site-section site-grad">
+      {/* ============ LA EXPERIENCIA (degradado + índice informativo) ============ */}
+      <section id="experiencia" className="site-section site-grad">
         <div className="site-wrap" style={{ paddingTop: "clamp(30px, 4vw, 90px)" }}>
           <Reveal>
             <h2 className="site-h2 site-h2--xl">
@@ -206,45 +199,91 @@ export default function HomePage() {
           </Reveal>
           <Reveal delay={160}>
             <p className="site-sub" style={{ marginTop: 34 }}>
-              La mejor versión de tu juego comienza aquí
+              Todo lo que incluye una visita a Eagle Club
             </p>
           </Reveal>
 
-          <div className="site-collage">
-            <Parallax speed={0.03} className="site-collage-tile site-collage-tile--interior">
-              <Reveal>
-                <Image
-                  src={entornoInterior}
-                  placeholder="blur"
-                  alt="Interior del club: lounge con bolsa de palos"
-                  sizes="(max-width: 900px) 100vw, 42vw"
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
-              </Reveal>
-            </Parallax>
-            <Parallax speed={0.07} className="site-collage-tile site-collage-tile--cuadro">
-              <Reveal delay={120}>
-                <Image
-                  src={entornoCuadro}
-                  placeholder="blur"
-                  alt="Palos de golf clásicos"
-                  sizes="(max-width: 900px) 80vw, 27vw"
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
-              </Reveal>
-            </Parallax>
-            <Parallax speed={0.1} className="site-collage-tile site-collage-tile--lifestyle">
-              <Reveal delay={200}>
-                <Image
-                  src={entornoLifestyle}
-                  placeholder="blur"
-                  alt="Detalle lifestyle: guante y pelota de golf"
-                  sizes="(max-width: 900px) 100vw, 63vw"
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
-              </Reveal>
-            </Parallax>
-          </div>
+          <Reveal>
+            <div className="site-index">
+              <div className="site-index-row">
+                <div className="site-index-term">Bahías privadas</div>
+                <p className="site-index-desc">
+                  Espacios reservados por hora para jugar entre amigos, cerrar
+                  una reunión o entrenar en serio: <strong>hasta seis
+                  personas</strong> por bahía, con sofás, mesa y servicio
+                  directo del bar.
+                </p>
+              </div>
+              <div className="site-index-row">
+                <div className="site-index-term">Tecnología Trackman</div>
+                <p className="site-index-desc">
+                  El mismo sistema con que entrenan los profesionales del tour:
+                  mide <strong>cada tiro en tiempo real</strong> y te permite
+                  jugar los campos más famosos del mundo sin salir de Santiago,
+                  en condiciones perfectas todo el año.
+                </p>
+              </div>
+              <div className="site-index-row">
+                <div className="site-index-term">Bar y cocina</div>
+                <p className="site-index-desc">
+                  Pides desde el iPad de la bahía o <strong>desde tu celular
+                  escaneando el código QR</strong>, sin interrumpir el juego. La
+                  cocina recibe tu pedido al instante y te lo llevamos a la
+                  bahía.
+                </p>
+              </div>
+              <div className="site-index-row">
+                <div className="site-index-term">Academia</div>
+                <p className="site-index-desc">
+                  Clases individuales y programas con instructores, sobre los
+                  datos reales de tu swing. Tu progreso queda registrado en tu
+                  perfil de socio, sesión a sesión.
+                </p>
+              </div>
+            </div>
+          </Reveal>
+
+          <Reveal delay={120}>
+            <h2 className="site-h2" style={{ marginTop: "clamp(64px, 7vw, 140px)" }}>
+              Así de simple
+            </h2>
+          </Reveal>
+          <Reveal delay={200}>
+            <div className="site-steps">
+              <div className="site-step">
+                <div className="site-step-num" aria-hidden>
+                  1
+                </div>
+                <h3>Reserva tu bahía</h3>
+                <p>
+                  Elige día, hora y bahía en línea, con confirmación inmediata.
+                  También puedes llegar sin reserva y tomar una bahía libre.
+                </p>
+              </div>
+              <div className="site-step">
+                <div className="site-step-num" aria-hidden>
+                  2
+                </div>
+                <h3>Juega</h3>
+                <p>
+                  Tu sesión parte puntual. Trackman registra cada golpe y el
+                  tiempo restante siempre está a la vista. ¿Quieren seguir? La
+                  extensión se pide con un toque.
+                </p>
+              </div>
+              <div className="site-step">
+                <div className="site-step-num" aria-hidden>
+                  3
+                </div>
+                <h3>Disfruta</h3>
+                <p>
+                  La carta completa del bar y la cocina llega a tu bahía. Al
+                  final, una sola cuenta: tiempo de juego y consumo juntos, y
+                  pagas desde tu asiento.
+                </p>
+              </div>
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -284,12 +323,46 @@ export default function HomePage() {
           </Reveal>
 
           <Reveal>
+            <div className="site-index" style={{ maxWidth: 880, marginInline: "auto" }}>
+              <div className="site-index-row">
+                <div className="site-index-term">Horas incluidas</div>
+                <p className="site-index-desc">
+                  Cada membresía incluye <strong>horas de bahía todos los
+                  meses</strong>, con acceso preferente para reservar antes que
+                  el público general.
+                </p>
+              </div>
+              <div className="site-index-row">
+                <div className="site-index-term">Cuenta de socio</div>
+                <p className="site-index-desc">
+                  Firma tus consumos con tu número de socio y paga todo junto a
+                  fin de mes. Sin sacar la tarjeta en cada visita.
+                </p>
+              </div>
+              <div className="site-index-row">
+                <div className="site-index-term">Invitados</div>
+                <p className="site-index-desc">
+                  Trae a quienes quieras a tu bahía y comparte los beneficios
+                  del club con tus invitados.
+                </p>
+              </div>
+              <div className="site-index-row">
+                <div className="site-index-term">Torneos y ligas</div>
+                <p className="site-index-desc">
+                  Competencias internas con ranking, y tus estadísticas de juego
+                  registradas en tu perfil para seguir tu progreso.
+                </p>
+              </div>
+            </div>
+          </Reveal>
+
+          <Reveal>
             <div style={{ marginTop: "clamp(40px, 4vw, 80px)" }}>
               <p className="site-body">
-                ¿Te gustaría saber más acerca de Eagle Club, su membresía y
-                beneficios?
+                Las membresías son limitadas y los primeros cupos se abrirán a
+                quienes estén en la lista.
                 <br />
-                Llena el formulario y pronto nos comunicaremos contigo.
+                Déjanos tus datos y te contactaremos con la información completa.
               </p>
             </div>
           </Reveal>
@@ -373,64 +446,24 @@ export default function HomePage() {
             </p>
           </Reveal>
 
-          <div
-            className="site-cards site-ubi-cards"
-            style={{ marginTop: "clamp(40px, 4vw, 80px)" }}
-          >
-            <Reveal className="site-card">
-              <div className="site-card-img">
-                <Image
-                  src={ubiHotel}
-                  placeholder="blur"
-                  alt="Skyline del barrio El Golf al atardecer"
-                  sizes="(max-width: 900px) 100vw, 28vw"
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
-              </div>
-              <h3>Barrio El Golf</h3>
-              <p>
-                En el barrio más exclusivo de Santiago, rodeado de los
-                principales hoteles y oficinas.
-              </p>
-            </Reveal>
-
-            <Reveal delay={120} className="site-card">
-              <div className="site-card-img">
-                <Image
-                  src={ubiRestaurant}
-                  placeholder="blur"
-                  alt="Mesa de restaurant"
-                  sizes="(max-width: 900px) 100vw, 28vw"
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
-              </div>
-              <h3>Restaurants y bares a tu alcance</h3>
-              <p>
-                Rodeado de la mejor oferta gastronómica para antes o después de
-                tu práctica.
-              </p>
-            </Reveal>
-
-            <Reveal delay={240} className="site-card">
-              <div className="site-card-img">
-                <Image
-                  src={ubiParking}
-                  placeholder="blur"
-                  alt="Estacionamiento con bolsa de palos"
-                  sizes="(max-width: 900px) 100vw, 28vw"
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
-              </div>
-              <h3>Estacionamiento y seguridad</h3>
-              <p>
-                Estacionamiento en el edificio y seguridad durante toda tu
-                visita.
-              </p>
-            </Reveal>
-          </div>
-
           <Reveal>
-            <hr className="site-hairline" style={{ marginTop: "clamp(48px, 5vw, 96px)" }} />
+            <div className="site-index" style={{ maxWidth: 880, marginInline: "auto" }}>
+              <div className="site-index-row">
+                <div className="site-index-term">Barrio El Golf</div>
+                <p className="site-index-desc">
+                  A pasos del metro El Golf, rodeado de los principales hoteles,
+                  oficinas y la mejor oferta gastronómica de Santiago — para
+                  antes o después de tu práctica.
+                </p>
+              </div>
+              <div className="site-index-row">
+                <div className="site-index-term">Estacionamiento</div>
+                <p className="site-index-desc">
+                  Estacionamiento en el mismo edificio y seguridad durante toda
+                  tu visita. Llegas, subes al segundo piso y juegas.
+                </p>
+              </div>
+            </div>
           </Reveal>
 
           <Reveal>
