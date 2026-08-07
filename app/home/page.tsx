@@ -90,26 +90,13 @@ export default function HomePage() {
 
       </section>
 
-      {/* ============ 2 · RESERVAR (absorbe eventos privados) ============ */}
+      {/* ============ 2 · RESERVAR ============ */}
       <section id="reservar" className="site-section site-eventos">
         <div className="site-wrap">
           <Reveal>
             <p className="site-eyebrow">Reservar</p>
             <div className="site-eyebrow-rule" />
           </Reveal>
-          <Reveal delay={120}>
-            <h2 className="site-h2" style={{ marginTop: 46 }}>
-              Tu bahía, a la hora que quieras
-            </h2>
-          </Reveal>
-          <Reveal delay={220}>
-            <p className="site-body" style={{ marginTop: 30 }}>
-              Elige día, hora y bahía en línea, con confirmación inmediata.
-              También puedes llegar sin reserva y tomar una bahía libre según
-              disponibilidad.
-            </p>
-          </Reveal>
-
           <Reveal delay={280}>
             <dl className="site-prices">
               <p className="site-prices-title">Precio</p>
@@ -142,32 +129,6 @@ export default function HomePage() {
             </div>
           </Reveal>
 
-          <Reveal>
-            <hr className="site-hairline" style={{ marginTop: "clamp(40px, 4vw, 76px)" }} />
-          </Reveal>
-
-          <Reveal delay={120}>
-            <h2 className="site-h2" style={{ marginTop: "clamp(34px, 3.4vw, 60px)" }}>
-              ¿Un evento privado?
-            </h2>
-          </Reveal>
-          <Reveal delay={200}>
-            <p className="site-body" style={{ marginTop: 26 }}>
-              Lanzamientos, encuentros corporativos y celebraciones privadas en
-              un espacio único. Podemos reservar bahías o el club completo, y
-              nuestro equipo produce cada evento a la medida.
-            </p>
-          </Reveal>
-          <Reveal>
-            <div style={{ textAlign: "center", marginTop: "clamp(26px, 2.6vw, 44px)" }}>
-              <a
-                className="site-btn"
-                href="mailto:contacto@eagleclub.cl?subject=Evento%20en%20Eagle%20Club"
-              >
-                Contáctanos
-              </a>
-            </div>
-          </Reveal>
         </div>
       </section>
 
@@ -178,42 +139,8 @@ export default function HomePage() {
             <p className="site-eyebrow site-eyebrow--bright">Ubicación</p>
             <div className="site-eyebrow-rule" />
           </Reveal>
-          <Reveal delay={120}>
-            <h2 className="site-h2" style={{ marginTop: 46 }}>
-              El lujo no es el lugar,
-              <br />
-              es la experiencia
-            </h2>
-          </Reveal>
-          <Reveal delay={220}>
-            <p className="site-body" style={{ marginTop: 30 }}>
-              En el corazón de El Golf, sobre el eje Isidora Goyenechea: la
-              mejor gastronomía, servicios y seguridad en un mismo entorno.
-            </p>
-          </Reveal>
-
           <Reveal>
-            <div className="site-index" style={{ maxWidth: 880, marginInline: "auto" }}>
-              <div className="site-index-row">
-                <div className="site-index-term">Barrio El Golf</div>
-                <p className="site-index-desc">
-                  A pasos del metro El Golf, rodeado de los principales hoteles,
-                  oficinas y la mejor oferta gastronómica de Santiago — para
-                  antes o después de tu práctica.
-                </p>
-              </div>
-              <div className="site-index-row">
-                <div className="site-index-term">Estacionamiento</div>
-                <p className="site-index-desc">
-                  Estacionamiento en el mismo edificio y seguridad durante toda
-                  tu visita. Llegas, subes al segundo piso y juegas.
-                </p>
-              </div>
-            </div>
-          </Reveal>
-
-          <Reveal>
-            <div className="site-info" style={{ marginTop: "clamp(30px, 3vw, 56px)" }}>
+            <div className="site-info" style={{ marginTop: "clamp(34px, 3.4vw, 60px)" }}>
               <div>
                 <h4>Dirección</h4>
                 <p style={{ margin: 0 }}>
