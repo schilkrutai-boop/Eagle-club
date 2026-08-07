@@ -12,7 +12,6 @@ import trioBag from "@/public/media/site/trio-bag.jpg";
 import trioWhisky from "@/public/media/site/trio-whisky.jpg";
 import isotipoRed from "@/public/media/site/isotipo-red.png";
 import isotipoCream from "@/public/media/site/isotipo-cream.png";
-import logoStacked from "@/public/media/eagleclub-logo-stacked.png";
 
 // Página nueva según la maqueta de la agencia. Vive en /home para revisión
 // del equipo; la landing "próximamente" de / no se toca hasta el visto bueno.
@@ -207,10 +206,35 @@ export default function HomePage() {
               disponibilidad.
             </p>
           </Reveal>
+
+          <Reveal delay={280}>
+            <dl className="site-prices">
+              <p className="site-prices-title">Precio</p>
+              <div className="site-price-row">
+                <dt>Horario punta</dt>
+                <dd>$70.000</dd>
+              </div>
+              <div className="site-price-row">
+                <dt>Horario valle</dt>
+                <dd>$50.000</dd>
+              </div>
+              <div className="site-price-row site-price-row--socios">
+                <dt>Socios</dt>
+                <dd>Gratis</dd>
+              </div>
+              <p className="site-price-note">
+                Los socios no pagan la bahía: su membresía la incluye.
+              </p>
+            </dl>
+          </Reveal>
+
           <Reveal>
-            <div style={{ textAlign: "center", marginTop: "clamp(30px, 3vw, 52px)" }}>
+            <div className="site-actions">
               <a className="site-btn" href="/demo">
                 Reserva tu bahía
+              </a>
+              <a className="site-btn site-btn--ghost" href={SOCIO_MAILTO}>
+                Quiero ser socio
               </a>
             </div>
           </Reveal>
@@ -244,117 +268,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ============ 3 · MEMBRESÍAS ============ */}
-      <section id="membresias" className="site-section">
-        <div className="site-wrap">
-          <Reveal>
-            <p className="site-eyebrow">Membresías</p>
-            <div className="site-eyebrow-rule" />
-          </Reveal>
-          <Reveal delay={120}>
-            <Image
-              src={logoStacked}
-              alt="Eagle Club — Indoor Golf"
-              className="site-club-logo"
-              sizes="(max-width: 900px) 70vw, 24vw"
-              style={{ marginTop: "clamp(28px, 2.6vw, 48px)" }}
-            />
-          </Reveal>
-
-          <Reveal delay={200}>
-            <p className="site-quote" style={{ marginTop: "clamp(34px, 3.4vw, 62px)" }}>
-              Hay lugares a los que se asiste.
-              <br />
-              <span>Y hay lugares a los que se pertenece.</span>
-            </p>
-          </Reveal>
-          <Reveal delay={260}>
-            <p className="site-body" style={{ marginTop: "clamp(26px, 2.6vw, 44px)" }}>
-              La membresía de Eagle Club nace para quienes entienden que el golf
-              es mucho más que un deporte y buscan vivirlo en un entorno donde
-              cada detalle ha sido cuidadosamente pensado.
-            </p>
-          </Reveal>
-
-          <Reveal>
-            <div style={{ maxWidth: 980, marginInline: "auto" }}>
-              <h2 className="site-h2" style={{ marginTop: "clamp(44px, 4.4vw, 84px)" }}>
-                Membresía Fundadores
-              </h2>
-
-              <div className="site-plan">
-                <div>
-                  <p className="site-plan-label">Valor mensual</p>
-                  <div className="site-plan-price">$250.000</div>
-                  <p className="site-plan-per">Por socio</p>
-                </div>
-                <p className="site-plan-desc">
-                  La <strong>Membresía Fundadores</strong> te entrega acceso
-                  preferente a una experiencia diseñada para quienes viven el
-                  golf con un estándar diferente.
-                </p>
-              </div>
-
-              <div className="site-benefits site-benefits--brief">
-                <div className="site-benefit">
-                  <h3>Acceso al club</h3>
-                  <ul>
-                    <li>
-                      <strong>6 horas mensuales de bahía</strong>, en cualquier
-                      horario, y 10% de descuento en horas adicionales.
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="site-benefit">
-                  <h3>Coaching</h3>
-                  <ul>
-                    <li>
-                      Programa <strong>APEX Pro Coaching</strong>: análisis de
-                      swing, plan de entrenamiento y una clase presencial al mes.
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="site-benefit">
-                  <h3>Privilegios</h3>
-                  <ul>
-                    <li>
-                      Beneficios en <strong>Viña Concha y Toro</strong>,{" "}
-                      <strong>Icons</strong> y <strong>Brooks Brothers</strong>,
-                      y 10% de descuento dentro del club.
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="site-benefit">
-                  <h3>Tu lugar</h3>
-                  <ul>
-                    <li>
-                      Casilla personal para guardar tus palos y acceso preferente
-                      para reservar.
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              <div style={{ textAlign: "center", marginTop: "clamp(38px, 3.8vw, 68px)" }}>
-                <a className="site-btn" href={SOCIO_MAILTO}>
-                  Quiero ser socio
-                </a>
-              </div>
-
-              <p className="site-scarcity">
-                Una vez alcanzados los 120 socios, el club adoptará un modelo de
-                membresía privada y el acceso a nuevos miembros quedará sujeto a
-                disponibilidad.
-              </p>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ============ UBICACIÓN ============ */}
+      {/* ============ 3 · UBICACIÓN ============ */}
       <section id="ubicacion" className="site-section">
         <div className="site-wrap">
           <Reveal>

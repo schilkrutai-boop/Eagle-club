@@ -8,7 +8,6 @@ import isotipo from "@/public/media/site/isotipo.png";
 const LINKS = [
   { href: "#club", label: "Club" },
   { href: "#reservar", label: "Reservar" },
-  { href: "#membresias", label: "Membresías" },
   { href: "#ubicacion", label: "Ubicación" },
 ];
 
