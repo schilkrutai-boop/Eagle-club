@@ -2,15 +2,15 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import SiteHeader from "@/components/site/SiteHeader";
 import Reveal from "@/components/site/Reveal";
-import DockTrio from "@/components/site/DockTrio";
+import Parallax from "@/components/site/Parallax";
 import SiteHeroVideo from "@/components/site/SiteHeroVideo";
 import { montserrat, formata } from "./fonts";
 import "./home.css";
 
 import trioExecutive from "@/public/media/site/trio-executive.jpg";
-import trioBag from "@/public/media/site/trio-bag.jpg";
-import trioWhisky from "@/public/media/site/trio-whisky.jpg";
-import isotipoRed from "@/public/media/site/isotipo-red.png";
+import clubLocker from "@/public/media/site/club-locker.jpg";
+import clubGlove from "@/public/media/site/club-glove.jpg";
+import clubBay from "@/public/media/site/club-bay.jpg";
 import isotipoCream from "@/public/media/site/isotipo-cream.png";
 
 // Página nueva según la maqueta de la agencia. Vive en /home para revisión
@@ -53,7 +53,7 @@ export default function HomePage() {
 
       {/* ============ 1 · CLUB ============ */}
       <section id="club" className="site-section">
-        <div className="site-wrap">
+        <Parallax speed={0.02} className="site-wrap">
           <Reveal>
             <p className="site-eyebrow">
               El
@@ -75,19 +75,65 @@ export default function HomePage() {
               la excelencia en cada detalle.
             </p>
           </Reveal>
-        </div>
+        </Parallax>
 
-        <div className="site-wrap" style={{ marginTop: "clamp(36px, 3.5vw, 64px)" }}>
-          <Reveal>
-            <DockTrio
-              left={trioExecutive}
-              center={trioBag}
-              right={trioWhisky}
-              isotipoRed={isotipoRed}
-            />
-          </Reveal>
-        </div>
+        <div className="site-wrap">
+          <div className="site-mosaic">
+            <div className="site-mosaic-col">
+              <Parallax speed={0.05}>
+                <Reveal>
+                  <figure className="site-fig--locker">
+                    <Image
+                      src={clubLocker}
+                      placeholder="blur"
+                      alt="Chaqueta, gorra, reloj, guantes y bolsa de palos en el casillero del club"
+                      sizes="(max-width: 720px) 100vw, 41vw"
+                    />
+                  </figure>
+                </Reveal>
+              </Parallax>
+              <Parallax speed={0.1}>
+                <Reveal delay={120}>
+                  <figure className="site-fig--glove">
+                    <Image
+                      src={clubGlove}
+                      placeholder="blur"
+                      alt="Mano con guante de Eagle Club sosteniendo una pelota de golf"
+                      sizes="(max-width: 720px) 100vw, 41vw"
+                    />
+                  </figure>
+                </Reveal>
+              </Parallax>
+            </div>
 
+            <div className="site-mosaic-col site-mosaic-col--offset">
+              <Parallax speed={0.12}>
+                <Reveal delay={80}>
+                  <figure className="site-fig--bay">
+                    <Image
+                      src={clubBay}
+                      placeholder="blur"
+                      alt="Bahía de simulador de Eagle Club con el logotipo en la pared"
+                      sizes="(max-width: 720px) 100vw, 41vw"
+                    />
+                  </figure>
+                </Reveal>
+              </Parallax>
+              <Parallax speed={0.03}>
+                <Reveal delay={200}>
+                  <figure className="site-fig--exec">
+                    <Image
+                      src={trioExecutive}
+                      placeholder="blur"
+                      alt="Golfista de traje con un palo y una pelota"
+                      sizes="(max-width: 720px) 100vw, 41vw"
+                    />
+                  </figure>
+                </Reveal>
+              </Parallax>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* ============ 2 · RESERVAR ============ */}

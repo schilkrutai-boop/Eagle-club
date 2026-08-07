@@ -407,150 +407,6 @@
   padding-top: 0;
 }
 
-/* --- tríptico con logo flotante (hover tipo dock) --- */
-.site-trio {
-  position: relative;
-}
-
-@media (min-width: 901px) {
-  .site-trio {
-    aspect-ratio: 2 / 1;
-  }
-
-  .site-trio-tile {
-    position: absolute;
-  }
-
-  .site-trio-tile--left {
-    left: 8%;
-    top: 15%;
-    width: 33.2%;
-    height: 71.5%;
-  }
-
-  .site-trio-tile--center {
-    left: 35.3%;
-    top: 5.4%;
-    width: 31.5%;
-    height: 91.3%;
-    z-index: 2;
-  }
-
-  .site-trio-tile--center .site-trio-zoom {
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
-  }
-
-  .site-trio-tile--right {
-    left: 61.1%;
-    top: 15%;
-    width: 32.3%;
-    height: 72.2%;
-  }
-}
-
-/* El nodo del tile recibe el translate inline del parallax; el zoom interno
-   recibe el scale del hover. Nodos separados para que no se pisen. */
-.site-trio-tile {
-  will-change: transform;
-}
-
-.site-trio-zoom {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.site-trio-tile img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: grayscale(1) contrast(1.02);
-}
-
-/* dock de Mac: el tile con hover crece, los vecinos apenas */
-.site-trio.is-hovering .site-trio-tile .site-trio-zoom {
-  transform: scale(1.015);
-}
-
-.site-trio.is-hovering .site-trio-tile.is-hot .site-trio-zoom {
-  transform: scale(1.055);
-}
-
-.site-trio-tile.is-hot {
-  z-index: 3;
-}
-
-/* lockup rojo flotante — permanece fijo mientras las imágenes se mueven */
-.site-trio-lockup {
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(18px, 3.2vw, 62px);
-  pointer-events: none;
-  color: var(--ec-red);
-}
-
-.site-trio-lockup img {
-  width: clamp(54px, 6.5vw, 124px);
-  height: auto;
-}
-
-.site-trio-word {
-  font-family: var(--font-formata), sans-serif;
-  font-size: clamp(20px, 2.9vw, 56px);
-  letter-spacing: 0.18em;
-  line-height: 1.12;
-  text-transform: uppercase;
-  text-align: left;
-}
-
-.site-trio-word small {
-  display: block;
-  font-size: clamp(8px, 0.73vw, 14px);
-  letter-spacing: 0.34em;
-  margin-top: 0.5em;
-  opacity: 0.85;
-}
-
-.site-trio-word--right {
-  text-align: right;
-}
-
-@media (max-width: 900px) {
-  .site-trio {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }
-
-  .site-trio-tile--left {
-    order: 2;
-  }
-
-  .site-trio-tile--center {
-    order: 1;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
-  }
-
-  .site-trio-tile--right {
-    order: 3;
-  }
-
-  .site-trio-tile {
-    aspect-ratio: 4 / 5;
-  }
-
-  .site-trio-lockup {
-    position: static;
-    order: 0;
-    margin-bottom: 10px;
-  }
-}
-
 /* --- índice de la experiencia: filas término + descripción --- */
 .site-index {
   margin-top: clamp(34px, 3.2vw, 60px);
@@ -597,6 +453,71 @@
   .site-index-row {
     grid-template-columns: 1fr;
     gap: 10px;
+  }
+}
+
+/* --- mosaico con parallax del Club ---
+   Dos columnas desfasadas; cada foto se desplaza a distinta velocidad al
+   hacer scroll, así el conjunto respira en vez de moverse en bloque. */
+.site-mosaic {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(18px, 2.2vw, 44px);
+  align-items: start;
+  margin-top: clamp(44px, 4.5vw, 96px);
+}
+
+.site-mosaic-col {
+  display: grid;
+  gap: clamp(22px, 2.8vw, 60px);
+}
+
+/* la columna derecha arranca más abajo: rompe la simetría */
+.site-mosaic-col--offset {
+  margin-top: clamp(40px, 7vw, 150px);
+}
+
+.site-mosaic figure {
+  margin: 0;
+  overflow: hidden;
+  background: #0a0909;
+}
+
+.site-mosaic img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.site-fig--locker {
+  aspect-ratio: 4 / 5;
+}
+
+.site-fig--glove {
+  aspect-ratio: 16 / 10;
+}
+
+.site-fig--bay {
+  aspect-ratio: 16 / 9;
+}
+
+.site-fig--exec {
+  aspect-ratio: 3 / 4;
+}
+
+@media (max-width: 720px) {
+  .site-mosaic {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .site-mosaic-col {
+    gap: 18px;
+  }
+
+  .site-mosaic-col--offset {
+    margin-top: 0;
   }
 }
 
