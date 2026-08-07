@@ -17,7 +17,6 @@ import isotipoCream from "@/public/media/site/isotipo-cream.png";
 import practicaTrackman from "@/public/media/site/practica-trackman.jpg";
 import practicaLounge from "@/public/media/site/practica-lounge.jpg";
 import practicaCafe from "@/public/media/site/practica-cafe.jpg";
-import eventosMartini from "@/public/media/site/eventos-martini.jpg";
 import ubiMapa from "@/public/media/site/ubi-mapa.jpg";
 import logoStacked from "@/public/media/eagleclub-logo-stacked.png";
 
@@ -85,7 +84,7 @@ export default function HomePage() {
           </Reveal>
         </div>
 
-        <div className="site-wrap" style={{ marginTop: "clamp(48px, 5vw, 96px)" }}>
+        <div className="site-wrap" style={{ marginTop: "clamp(36px, 3.5vw, 64px)" }}>
           <Reveal>
             <DockTrio
               left={trioExecutive}
@@ -244,7 +243,7 @@ export default function HomePage() {
           </Reveal>
 
           <Reveal delay={120}>
-            <h2 className="site-h2" style={{ marginTop: "clamp(64px, 7vw, 140px)" }}>
+            <h2 className="site-h2" style={{ marginTop: "clamp(48px, 5vw, 88px)" }}>
               Así de simple
             </h2>
           </Reveal>
@@ -304,7 +303,7 @@ export default function HomePage() {
               alt="Eagle Club — Indoor Golf"
               className="site-club-logo"
               sizes="(max-width: 900px) 70vw, 24vw"
-              style={{ marginTop: "clamp(40px, 4vw, 80px)" }}
+              style={{ marginTop: "clamp(28px, 2.6vw, 48px)" }}
             />
           </Reveal>
           <Reveal delay={200}>
@@ -314,14 +313,6 @@ export default function HomePage() {
               misma forma de entender el juego.
             </p>
           </Reveal>
-          <Reveal delay={260}>
-            <h2 className="site-h2" style={{ marginTop: "clamp(40px, 4vw, 80px)" }}>
-              El golf es mucho más que un deporte,
-              <br />
-              es un estilo de vida
-            </h2>
-          </Reveal>
-
           <Reveal>
             <div className="site-index" style={{ maxWidth: 880, marginInline: "auto" }}>
               <div className="site-index-row">
@@ -375,7 +366,7 @@ export default function HomePage() {
       </section>
 
       {/* ============ EVENTOS ============ */}
-      <section id="eventos" className="site-section site-eventos" style={{ paddingBottom: 0 }}>
+      <section id="eventos" className="site-section site-eventos">
         <div className="site-wrap">
           <Reveal>
             <p className="site-eyebrow">Eventos</p>
@@ -411,18 +402,7 @@ export default function HomePage() {
             </div>
           </Reveal>
 
-          <Reveal>
-            <div className="site-eventos-img" style={{ marginTop: "clamp(40px, 4vw, 80px)" }}>
-              <Image
-                src={eventosMartini}
-                alt="Brindis con copas de martini y pelotas de golf"
-                sizes="(max-width: 900px) 100vw, 82vw"
-                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 18%" }}
-              />
-            </div>
-          </Reveal>
         </div>
-        <div className="site-eventos-fade" />
       </section>
 
       {/* ============ UBICACIÓN ============ */}

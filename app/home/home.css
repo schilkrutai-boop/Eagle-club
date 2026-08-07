@@ -311,7 +311,7 @@
   position: relative;
   height: 100svh;
   min-height: 560px;
-  max-height: 1120px;
+  max-height: 900px;
   overflow: hidden;
 }
 
@@ -387,7 +387,7 @@
    ============================================================ */
 .site-section {
   position: relative;
-  padding-block: clamp(56px, 7vw, 130px);
+  padding-block: clamp(44px, 5vw, 88px);
 }
 
 .site-section--flush-top {
@@ -619,7 +619,7 @@
 
 /* --- índice de la experiencia: filas término + descripción --- */
 .site-index {
-  margin-top: clamp(44px, 4.5vw, 96px);
+  margin-top: clamp(34px, 3.2vw, 60px);
   text-align: left;
 }
 
@@ -627,7 +627,7 @@
   display: grid;
   grid-template-columns: minmax(150px, 240px) 1fr;
   gap: clamp(18px, 3vw, 64px);
-  padding: clamp(20px, 2vw, 34px) 0;
+  padding: clamp(16px, 1.6vw, 26px) 0;
   border-top: 1px solid rgba(201, 150, 57, 0.22);
 }
 
@@ -670,8 +670,8 @@
 .site-steps {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: clamp(28px, 3.5vw, 72px);
-  margin-top: clamp(44px, 4.5vw, 96px);
+  gap: clamp(24px, 3vw, 56px);
+  margin-top: clamp(32px, 3vw, 56px);
   text-align: left;
 }
 
@@ -719,7 +719,7 @@
 
 /* --- el club: formulario --- */
 .site-club-logo {
-  width: clamp(240px, 24vw, 460px);
+  width: clamp(160px, 13vw, 230px);
   height: auto;
   margin-inline: auto;
   display: block;
@@ -809,7 +809,7 @@
 
 .site-eventos-img {
   position: relative;
-  aspect-ratio: 1580 / 860;
+  aspect-ratio: 21 / 8;
   overflow: hidden;
 }
 
@@ -880,7 +880,7 @@
 .site-mapa {
   display: block;
   position: relative;
-  aspect-ratio: 1580 / 860;
+  aspect-ratio: 3 / 1;
   overflow: hidden;
 }
 
