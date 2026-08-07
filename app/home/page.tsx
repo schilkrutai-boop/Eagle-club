@@ -59,14 +59,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ============ NUESTRA MIRADA ============ */}
-      <section id="mirada" className="site-section">
+      {/* ============ 1 · CLUB ============ */}
+      <section id="club" className="site-section">
         <div className="site-wrap">
           <Reveal>
             <p className="site-eyebrow">
-              Nuestra
+              El
               <br />
-              mirada
+              club
             </p>
             <div className="site-eyebrow-rule" />
           </Reveal>
@@ -177,13 +177,6 @@ export default function HomePage() {
             </Reveal>
           </div>
 
-          <Reveal>
-            <div style={{ textAlign: "center", marginTop: "clamp(40px, 4vw, 76px)" }}>
-              <a className="site-btn" href="/demo">
-                Reserva tu práctica
-              </a>
-            </div>
-          </Reveal>
         </div>
       </section>
 
@@ -287,15 +280,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ============ EL CLUB ============ */}
-      <section id="club" className="site-section">
+      {/* ============ 2 · MEMBRESÍAS ============ */}
+      <section id="membresias" className="site-section">
         <div className="site-wrap">
           <Reveal>
-            <p className="site-eyebrow">
-              El
-              <br />
-              club
-            </p>
+            <p className="site-eyebrow">Membresías</p>
             <div className="site-eyebrow-rule" />
           </Reveal>
           <Reveal delay={120}>
@@ -366,34 +355,51 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ============ EVENTOS ============ */}
-      <section id="eventos" className="site-section site-eventos">
+      {/* ============ 3 · RESERVAR (absorbe eventos privados) ============ */}
+      <section id="reservar" className="site-section site-eventos">
         <div className="site-wrap">
           <Reveal>
-            <p className="site-eyebrow">Eventos</p>
+            <p className="site-eyebrow">Reservar</p>
             <div className="site-eyebrow-rule" />
           </Reveal>
           <Reveal delay={120}>
             <h2 className="site-h2" style={{ marginTop: 46 }}>
-              Un espacio donde cada encuentro
-              <br />
-              se convierte en una experiencia
+              Tu bahía, a la hora que quieras
             </h2>
           </Reveal>
           <Reveal delay={220}>
             <p className="site-body" style={{ marginTop: 30 }}>
-              Lanzamientos, encuentros corporativos y celebraciones privadas en
-              un espacio único. Nuestro equipo produce cada evento a la medida.
-            </p>
-          </Reveal>
-          <Reveal delay={280}>
-            <p className="site-sub" style={{ marginTop: "clamp(36px, 3.5vw, 64px)" }}>
-              Cuéntanos tu idea, evento, proyecto o lanzamiento
-              <br />y pronto nos comunicaremos contigo
+              Elige día, hora y bahía en línea, con confirmación inmediata.
+              También puedes llegar sin reserva y tomar una bahía libre según
+              disponibilidad.
             </p>
           </Reveal>
           <Reveal>
-            <div style={{ textAlign: "center", marginTop: "clamp(30px, 3vw, 56px)" }}>
+            <div style={{ textAlign: "center", marginTop: "clamp(30px, 3vw, 52px)" }}>
+              <a className="site-btn" href="/demo">
+                Reserva tu bahía
+              </a>
+            </div>
+          </Reveal>
+
+          <Reveal>
+            <hr className="site-hairline" style={{ marginTop: "clamp(40px, 4vw, 76px)" }} />
+          </Reveal>
+
+          <Reveal delay={120}>
+            <h2 className="site-h2" style={{ marginTop: "clamp(34px, 3.4vw, 60px)" }}>
+              ¿Un evento privado?
+            </h2>
+          </Reveal>
+          <Reveal delay={200}>
+            <p className="site-body" style={{ marginTop: 26 }}>
+              Lanzamientos, encuentros corporativos y celebraciones privadas en
+              un espacio único. Podemos reservar bahías o el club completo, y
+              nuestro equipo produce cada evento a la medida.
+            </p>
+          </Reveal>
+          <Reveal>
+            <div style={{ textAlign: "center", marginTop: "clamp(26px, 2.6vw, 44px)" }}>
               <a
                 className="site-btn"
                 href="mailto:contacto@eagleclub.cl?subject=Evento%20en%20Eagle%20Club"
@@ -402,7 +408,6 @@ export default function HomePage() {
               </a>
             </div>
           </Reveal>
-
         </div>
       </section>
 
