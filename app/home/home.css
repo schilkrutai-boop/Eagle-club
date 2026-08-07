@@ -5,7 +5,8 @@
    ============================================================ */
 
 .site {
-  --ec-espresso: #150000;
+  /* Neutro: el espresso original (#150000) es rojo puro y se leía rojizo. */
+  --ec-espresso: #0e0d0d;
   --ec-cream: #fffffa;
   --ec-olive: #515b46;
   --ec-gold: #8a6a3f;
@@ -162,8 +163,9 @@
 }
 
 .site-header.is-scrolled {
+  /* Totalmente transparente: el desenfoque dejaba un rectángulo visible al
+     cruzar el borde entre secciones de distinto color. */
   background: transparent;
-  backdrop-filter: blur(12px);
 }
 
 .site-header-inner {
@@ -249,6 +251,20 @@
 .site-header.is-compact .site-header-wordmark {
   opacity: 0;
   max-height: 0;
+}
+
+/* Al bajar el encabezado se reduce al logotipo: menú y CTA se ocultan y
+   queda solo el isotipo sobre la línea. */
+.site-header.is-compact .site-menu-btn,
+.site-header.is-compact .site-header-cta {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.site-menu-btn,
+.site-header-cta {
+  transition: color 0.25s ease, opacity 0.35s ease, visibility 0.35s ease;
 }
 
 /* menú overlay */
