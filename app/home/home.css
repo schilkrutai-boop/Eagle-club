@@ -726,6 +726,18 @@
   text-align: left;
 }
 
+/* versión breve: cuatro puntos cortos en dos columnas */
+.site-benefits--brief {
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(26px, 2.8vw, 48px) clamp(32px, 3.6vw, 72px);
+}
+
+@media (max-width: 720px) {
+  .site-benefits--brief {
+    grid-template-columns: 1fr;
+  }
+}
+
 .site-benefit h3 {
   font-family: var(--font-formata), sans-serif;
   font-weight: 400;

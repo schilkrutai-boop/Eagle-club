@@ -7,8 +7,8 @@ import isotipo from "@/public/media/site/isotipo.png";
 // El orden del menú es el orden de la página.
 const LINKS = [
   { href: "#club", label: "Club" },
-  { href: "#membresias", label: "Membresías" },
   { href: "#reservar", label: "Reservar" },
+  { href: "#membresias", label: "Membresías" },
   { href: "#ubicacion", label: "Ubicación" },
 ];
 
