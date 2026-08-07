@@ -17,7 +17,6 @@ import isotipoCream from "@/public/media/site/isotipo-cream.png";
 import practicaTrackman from "@/public/media/site/practica-trackman.jpg";
 import practicaLounge from "@/public/media/site/practica-lounge.jpg";
 import practicaCafe from "@/public/media/site/practica-cafe.jpg";
-import ubiMapa from "@/public/media/site/ubi-mapa.jpg";
 import logoStacked from "@/public/media/eagleclub-logo-stacked.png";
 
 // Página nueva según la maqueta de la agencia. Vive en /home para revisión
@@ -457,9 +456,11 @@ export default function HomePage() {
               <div>
                 <h4>Dirección</h4>
                 <p style={{ margin: 0 }}>
-                  Isidora Goyenechea 3000, segundo piso
-                  <br />
-                  Las Condes, Santiago, Chile.
+                  <a href={MAPS_URL} target="_blank" rel="noopener noreferrer">
+                    Isidora Goyenechea 3000, segundo piso
+                    <br />
+                    Las Condes, Santiago, Chile.
+                  </a>
                 </p>
               </div>
               <div>
@@ -485,24 +486,6 @@ export default function HomePage() {
                 </p>
               </div>
             </div>
-          </Reveal>
-
-          <Reveal>
-            <a
-              className="site-mapa"
-              href={MAPS_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Abrir la ubicación de Eagle Club en Google Maps"
-              style={{ marginTop: "clamp(40px, 4vw, 80px)" }}
-            >
-              <Image
-                src={ubiMapa}
-                alt="Mapa: Isidora Goyenechea 3000, Las Condes"
-                sizes="(max-width: 900px) 100vw, 82vw"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              />
-            </a>
           </Reveal>
         </div>
       </section>
