@@ -13,9 +13,6 @@ import trioBag from "@/public/media/site/trio-bag.jpg";
 import trioWhisky from "@/public/media/site/trio-whisky.jpg";
 import isotipoRed from "@/public/media/site/isotipo-red.png";
 import isotipoCream from "@/public/media/site/isotipo-cream.png";
-import practicaTrackman from "@/public/media/site/practica-trackman.jpg";
-import practicaLounge from "@/public/media/site/practica-lounge.jpg";
-import practicaCafe from "@/public/media/site/practica-cafe.jpg";
 import logoStacked from "@/public/media/eagleclub-logo-stacked.png";
 
 // Página nueva según la maqueta de la agencia. Vive en /home para revisión
@@ -82,94 +79,9 @@ export default function HomePage() {
             />
           </Reveal>
         </div>
-      </section>
 
-      {/* ============ LA PRÁCTICA ============ */}
-      <section id="practica" className="site-section site-practica">
-        <div className="site-wrap">
-          <Reveal>
-            <p className="site-eyebrow">
-              La
-              <br />
-              práctica
-            </p>
-            <div className="site-eyebrow-rule" />
-          </Reveal>
-          <Reveal delay={120}>
-            <h2 className="site-h2 site-h2--ink" style={{ marginTop: 46 }}>
-              La excelencia no necesita un campo,
-              <br />
-              solo un espacio para jugar
-            </h2>
-          </Reveal>
-          <Reveal delay={220}>
-            <p className="site-body site-body--ink" style={{ marginTop: 30 }}>
-              Bahías equipadas con tecnología Trackman, un lounge para
-              compartir y un servicio pensado para que cada práctica sea una
-              experiencia completa.
-            </p>
-          </Reveal>
-
-          <div className="site-cards" style={{ marginTop: "clamp(40px, 4vw, 80px)" }}>
-            <Reveal className="site-card">
-              <div className="site-card-img">
-                <Image
-                  src={practicaTrackman}
-                  placeholder="blur"
-                  alt="Bahía de práctica con simulador Trackman"
-                  sizes="(max-width: 900px) 100vw, 28vw"
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
-              </div>
-              <h3>Juega como un profesional</h3>
-              <p>
-                Tecnología Trackman en cada bahía: datos precisos de tu swing y
-                los mejores campos del mundo, en condiciones perfectas todo el
-                año.
-              </p>
-            </Reveal>
-
-            <Reveal delay={120} className="site-card">
-              <div className="site-card-img">
-                <Image
-                  src={practicaLounge}
-                  placeholder="blur"
-                  alt="Lounge de Eagle Club"
-                  sizes="(max-width: 900px) 100vw, 28vw"
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
-              </div>
-              <h3>Pasar un momento o tener una reunión</h3>
-              <p>
-                Lounge y sala de estar para reuniones y sobremesas, con espacio
-                para guardar tus palos. Un lugar pensado para quedarse.
-              </p>
-            </Reveal>
-
-            <Reveal delay={240} className="site-card">
-              <div className="site-card-img">
-                <Image
-                  src={practicaCafe}
-                  placeholder="blur"
-                  alt="Café de especialidad en Eagle Club"
-                  sizes="(max-width: 900px) 100vw, 28vw"
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
-              </div>
-              <h3>¿Café, té o un trago?</h3>
-              <p>
-                Servicio de cafetería y bar disponible durante toda tu visita,
-                sin levantarte de la bahía.
-              </p>
-            </Reveal>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ============ LA EXPERIENCIA (degradado + índice informativo) ============ */}
-      <section id="experiencia" className="site-section site-grad">
-        <div className="site-wrap" style={{ paddingTop: "clamp(30px, 4vw, 90px)" }}>
+        {/* --- todo lo que incluye una visita (parte de Club) --- */}
+        <div className="site-wrap" style={{ marginTop: "clamp(56px, 6vw, 120px)" }}>
           <Reveal>
             <h2 className="site-h2 site-h2--xl">
               Cuando el entorno inspira,

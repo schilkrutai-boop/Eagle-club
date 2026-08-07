@@ -538,85 +538,6 @@
   }
 }
 
-/* --- la práctica (crema) --- */
-.site-practica {
-  background: var(--ec-cream);
-  color: var(--ec-ink);
-}
-
-.site-cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(14px, 0.9vw, 18px);
-}
-
-@media (max-width: 900px) {
-  .site-cards {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
-}
-
-.site-card-img {
-  position: relative;
-  aspect-ratio: 518 / 480;
-  overflow: hidden;
-}
-
-.site-card-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.site-card:hover .site-card-img img {
-  transform: scale(1.045);
-}
-
-.site-card h3 {
-  font-weight: 300;
-  font-size: clamp(13px, 0.81vw, 15.5px);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  margin: 22px 0 10px;
-}
-
-.site-card p {
-  font-weight: 300;
-  font-size: clamp(13px, 0.73vw, 14px);
-  line-height: 1.8;
-  letter-spacing: 0.02em;
-  margin: 0;
-  color: rgba(22, 0, 0, 0.86);
-}
-
-/* --- degradado crema → espresso con collage --- */
-.site-grad {
-  background: linear-gradient(
-    180deg,
-    var(--ec-cream) 0%,
-    #b3a89f 16%,
-    #63504a 26%,
-    #251111 33%,
-    var(--ec-espresso) 40%
-  );
-}
-
-/* En teléfono la sección es más corta: el degradado debe llegar al espresso
-   antes de que empiece el titular, o el texto claro queda sobre fondo claro. */
-@media (max-width: 720px) {
-  .site-grad {
-    background: linear-gradient(
-      180deg,
-      var(--ec-cream) 0%,
-      #63504a 5%,
-      #251111 9%,
-      var(--ec-espresso) 13%
-    );
-  }
-}
-
 /* --- índice de la experiencia: filas término + descripción --- */
 .site-index {
   margin-top: clamp(34px, 3.2vw, 60px);
@@ -987,18 +908,6 @@
 }
 
 /* --- ubicación --- */
-.site-ubi-cards .site-card h3 {
-  color: var(--ec-text);
-}
-
-.site-ubi-cards .site-card p {
-  color: rgba(255, 255, 251, 0.82);
-}
-
-.site-ubi-cards .site-card-img {
-  aspect-ratio: 518 / 300;
-}
-
 .site-hairline {
   border: 0;
   border-top: 1px solid rgba(255, 255, 251, 0.22);
@@ -1120,8 +1029,5 @@
     transition: none;
   }
 
-  .site-trio-zoom,
-  .site-card-img img {
-    transition: none;
-  }
+
 }
