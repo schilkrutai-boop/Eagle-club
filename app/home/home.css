@@ -584,57 +584,6 @@
   }
 }
 
-/* --- cómo funciona: tres pasos reales --- */
-.site-steps {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(24px, 3vw, 56px);
-  margin-top: clamp(32px, 3vw, 56px);
-  text-align: left;
-}
-
-.site-step-num {
-  font-weight: 100;
-  font-size: clamp(40px, 3.4vw, 64px);
-  line-height: 1;
-  color: var(--ec-gold-b);
-  letter-spacing: 0.04em;
-}
-
-.site-step h3 {
-  font-family: var(--font-formata), sans-serif;
-  font-weight: 400;
-  font-size: clamp(13px, 0.91vw, 17px);
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--ec-text);
-  margin: 18px 0 12px;
-}
-
-.site-step p {
-  font-weight: 300;
-  font-size: clamp(13.5px, 0.8vw, 15.5px);
-  line-height: 1.85;
-  letter-spacing: 0.02em;
-  color: rgba(255, 255, 251, 0.78);
-  margin: 0;
-}
-
-@media (max-width: 720px) {
-  .site-steps {
-    grid-template-columns: 1fr;
-    gap: 34px;
-  }
-
-  .site-step-num {
-    font-size: 40px;
-  }
-
-  .site-step h3 {
-    margin-top: 10px;
-  }
-}
-
 /* --- precios de la bahía --- */
 .site-prices {
   max-width: 620px;
