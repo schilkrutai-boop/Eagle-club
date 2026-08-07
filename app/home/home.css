@@ -309,9 +309,10 @@
    ============================================================ */
 .site-hero {
   position: relative;
-  height: 100svh;
-  min-height: 560px;
-  max-height: 900px;
+  /* El hero toma la proporción del video (16:9) para que se vea completo,
+     sin recorte. La altura la define el ancho de la pantalla. */
+  aspect-ratio: 16 / 9;
+  width: 100%;
   overflow: hidden;
 }
 
@@ -352,18 +353,14 @@
     linear-gradient(180deg, rgba(21, 0, 0, 0) 55%, var(--ec-espresso) 96%);
 }
 
-/* En teléfono la portada muestra la foto COMPLETA: el hero adopta la
-   proporción exacta de la imagen (1672x941) a todo el ancho, sin recortes.
-   Como no hay que estirar nada, se ve nítida. */
 @media (max-width: 720px) {
+  /* El hero es bajo en teléfono y el encabezado fijo taparía un tercio del
+     cuadro: lo desplazamos para que el video quede completo bajo la barra. */
   .site-hero {
-    height: auto;
-    aspect-ratio: 1672 / 941;
-    min-height: 0;
-    max-height: none;
+    margin-top: clamp(64px, 6.9vw, 132px);
   }
 
-  /* La foto ya ocupa poco alto: el velo inferior fuerte la apagaría. */
+  /* El video ocupa poco alto: el velo inferior fuerte lo apagaría. */
   .site-hero-veil {
     background: linear-gradient(
       180deg,
