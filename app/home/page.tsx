@@ -186,7 +186,7 @@ export default function HomePage() {
 
           <Reveal>
             <div style={{ textAlign: "center", marginTop: "clamp(40px, 4vw, 76px)" }}>
-              <a className="site-btn" href="/demo">
+              <a className="site-btn" href="/reservar">
                 Reserva tu práctica
               </a>
             </div>
