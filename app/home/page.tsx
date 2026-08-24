@@ -166,7 +166,7 @@ export default function HomePage() {
 
           <Reveal>
             <div className="site-actions">
-              <a className="site-btn" href="/demo">
+              <a className="site-btn" href="https://app.eagleclub.cl/reservar">
                 Reserva tu bahía
               </a>
               <a className="site-btn site-btn--ghost" href={SOCIO_MAILTO}>
