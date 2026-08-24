@@ -5,7 +5,8 @@
    ============================================================ */
 
 .site {
-  --ec-espresso: #150000;
+  /* Neutro: el espresso original (#150000) es rojo puro y se leía rojizo. */
+  --ec-espresso: #0e0d0d;
   --ec-cream: #fffffa;
   --ec-olive: #515b46;
   --ec-gold: #8a6a3f;
@@ -162,8 +163,9 @@
 }
 
 .site-header.is-scrolled {
-  background: linear-gradient(180deg, rgba(21, 0, 0, 0.92), rgba(21, 0, 0, 0.78));
-  backdrop-filter: blur(10px);
+  /* Totalmente transparente: el desenfoque dejaba un rectángulo visible al
+     cruzar el borde entre secciones de distinto color. */
+  background: transparent;
 }
 
 .site-header-inner {
@@ -251,12 +253,26 @@
   max-height: 0;
 }
 
+/* Al bajar el encabezado se reduce al logotipo: menú y CTA se ocultan y
+   queda solo el isotipo sobre la línea. */
+.site-header.is-compact .site-menu-btn,
+.site-header.is-compact .site-header-cta {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.site-menu-btn,
+.site-header-cta {
+  transition: color 0.25s ease, opacity 0.35s ease, visibility 0.35s ease;
+}
+
 /* menú overlay */
 .site-menu {
   position: fixed;
   inset: 0;
   z-index: 70;
-  background: rgba(21, 0, 0, 0.97);
+  background: rgba(8, 6, 6, 0.97);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -309,9 +325,10 @@
    ============================================================ */
 .site-hero {
   position: relative;
-  height: 100svh;
-  min-height: 560px;
-  max-height: 1120px;
+  /* El hero toma la proporción del video (16:9) para que se vea completo,
+     sin recorte. La altura la define el ancho de la pantalla. */
+  aspect-ratio: 16 / 9;
+  width: 100%;
   overflow: hidden;
 }
 
@@ -348,28 +365,24 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(21, 0, 0, 0.62) 0%, rgba(21, 0, 0, 0) 26%),
-    linear-gradient(180deg, rgba(21, 0, 0, 0) 55%, var(--ec-espresso) 96%);
+    linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 26%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 58%, var(--ec-espresso) 97%);
 }
 
-/* En teléfono la portada muestra la foto COMPLETA: el hero adopta la
-   proporción exacta de la imagen (1672x941) a todo el ancho, sin recortes.
-   Como no hay que estirar nada, se ve nítida. */
 @media (max-width: 720px) {
+  /* El hero es bajo en teléfono y el encabezado fijo taparía un tercio del
+     cuadro: lo desplazamos para que el video quede completo bajo la barra. */
   .site-hero {
-    height: auto;
-    aspect-ratio: 1672 / 941;
-    min-height: 0;
-    max-height: none;
+    margin-top: clamp(64px, 6.9vw, 132px);
   }
 
-  /* La foto ya ocupa poco alto: el velo inferior fuerte la apagaría. */
+  /* El video ocupa poco alto: el velo inferior fuerte lo apagaría. */
   .site-hero-veil {
     background: linear-gradient(
       180deg,
-      rgba(21, 0, 0, 0.35) 0%,
-      rgba(21, 0, 0, 0) 30%,
-      rgba(21, 0, 0, 0) 72%,
+      rgba(0, 0, 0, 0.3) 0%,
+      rgba(0, 0, 0, 0) 30%,
+      rgba(0, 0, 0, 0) 74%,
       var(--ec-espresso) 100%
     );
   }
@@ -387,296 +400,234 @@
    ============================================================ */
 .site-section {
   position: relative;
-  padding-block: clamp(56px, 7vw, 130px);
+  padding-block: clamp(44px, 5vw, 88px);
 }
 
 .site-section--flush-top {
   padding-top: 0;
 }
 
-/* --- tríptico con logo flotante (hover tipo dock) --- */
-.site-trio {
-  position: relative;
-}
-
-@media (min-width: 901px) {
-  .site-trio {
-    aspect-ratio: 2 / 1;
-  }
-
-  .site-trio-tile {
-    position: absolute;
-  }
-
-  .site-trio-tile--left {
-    left: 8%;
-    top: 15%;
-    width: 33.2%;
-    height: 71.5%;
-  }
-
-  .site-trio-tile--center {
-    left: 35.3%;
-    top: 5.4%;
-    width: 31.5%;
-    height: 91.3%;
-    z-index: 2;
-  }
-
-  .site-trio-tile--center .site-trio-zoom {
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
-  }
-
-  .site-trio-tile--right {
-    left: 61.1%;
-    top: 15%;
-    width: 32.3%;
-    height: 72.2%;
-  }
-}
-
-/* El nodo del tile recibe el translate inline del parallax; el zoom interno
-   recibe el scale del hover. Nodos separados para que no se pisen. */
-.site-trio-tile {
-  will-change: transform;
-}
-
-.site-trio-zoom {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.site-trio-tile img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: grayscale(1) contrast(1.02);
-}
-
-/* dock de Mac: el tile con hover crece, los vecinos apenas */
-.site-trio.is-hovering .site-trio-tile .site-trio-zoom {
-  transform: scale(1.015);
-}
-
-.site-trio.is-hovering .site-trio-tile.is-hot .site-trio-zoom {
-  transform: scale(1.055);
-}
-
-.site-trio-tile.is-hot {
-  z-index: 3;
-}
-
-/* lockup rojo flotante — permanece fijo mientras las imágenes se mueven */
-.site-trio-lockup {
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(18px, 3.2vw, 62px);
-  pointer-events: none;
-  color: var(--ec-red);
-}
-
-.site-trio-lockup img {
-  width: clamp(54px, 6.5vw, 124px);
-  height: auto;
-}
-
-.site-trio-word {
-  font-family: var(--font-formata), sans-serif;
-  font-size: clamp(20px, 2.9vw, 56px);
-  letter-spacing: 0.18em;
-  line-height: 1.12;
-  text-transform: uppercase;
+/* --- índice de la experiencia: filas término + descripción --- */
+.site-index {
+  margin-top: clamp(34px, 3.2vw, 60px);
   text-align: left;
 }
 
-.site-trio-word small {
-  display: block;
-  font-size: clamp(8px, 0.73vw, 14px);
-  letter-spacing: 0.34em;
-  margin-top: 0.5em;
-  opacity: 0.85;
-}
-
-.site-trio-word--right {
-  text-align: right;
-}
-
-@media (max-width: 900px) {
-  .site-trio {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }
-
-  .site-trio-tile--left {
-    order: 2;
-  }
-
-  .site-trio-tile--center {
-    order: 1;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
-  }
-
-  .site-trio-tile--right {
-    order: 3;
-  }
-
-  .site-trio-tile {
-    aspect-ratio: 4 / 5;
-  }
-
-  .site-trio-lockup {
-    position: static;
-    order: 0;
-    margin-bottom: 10px;
-  }
-}
-
-/* --- la práctica (crema) --- */
-.site-practica {
-  background: var(--ec-cream);
-  color: var(--ec-ink);
-}
-
-.site-cards {
+.site-index-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(14px, 0.9vw, 18px);
+  grid-template-columns: minmax(150px, 240px) 1fr;
+  gap: clamp(18px, 3vw, 64px);
+  padding: clamp(16px, 1.6vw, 26px) 0;
+  border-top: 1px solid rgba(201, 150, 57, 0.22);
 }
 
-@media (max-width: 900px) {
-  .site-cards {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
+.site-index-row:last-child {
+  border-bottom: 1px solid rgba(201, 150, 57, 0.22);
 }
 
-.site-card-img {
-  position: relative;
-  aspect-ratio: 518 / 480;
-  overflow: hidden;
-}
-
-.site-card-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.site-card:hover .site-card-img img {
-  transform: scale(1.045);
-}
-
-.site-card h3 {
-  font-weight: 300;
-  font-size: clamp(13px, 0.81vw, 15.5px);
-  letter-spacing: 0.14em;
+.site-index-term {
+  font-family: var(--font-formata), sans-serif;
+  font-size: clamp(12px, 0.85vw, 16px);
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  margin: 22px 0 10px;
+  color: var(--ec-gold-b);
+  padding-top: 4px;
 }
 
-.site-card p {
+.site-index-desc {
   font-weight: 300;
-  font-size: clamp(13px, 0.73vw, 14px);
-  line-height: 1.8;
+  font-size: clamp(14px, 0.85vw, 16.5px);
+  line-height: 1.85;
   letter-spacing: 0.02em;
+  color: rgba(255, 255, 251, 0.88);
   margin: 0;
-  color: rgba(22, 0, 0, 0.86);
+  max-width: 62ch;
 }
 
-/* --- degradado crema → espresso con collage --- */
-.site-grad {
-  background: linear-gradient(
-    180deg,
-    var(--ec-cream) 0%,
-    #b3a89f 16%,
-    #63504a 26%,
-    #251111 33%,
-    var(--ec-espresso) 40%
-  );
+.site-index-desc strong {
+  font-weight: 500;
+  color: var(--ec-text);
 }
 
-.site-collage {
-  position: relative;
-  margin-top: clamp(40px, 5vw, 110px);
-}
-
-@media (min-width: 901px) {
-  .site-collage {
-    aspect-ratio: 1920 / 2220;
-  }
-
-  .site-collage-tile {
-    position: absolute;
-  }
-
-  .site-collage-tile--interior {
-    left: 0;
-    top: 19.5%;
-    width: 50.1%;
-    height: 53.9%;
-    z-index: 1;
-  }
-
-  .site-collage-tile--cuadro {
-    left: 33.9%;
-    top: 0.7%;
-    width: 32.6%;
-    height: 47.9%;
-    z-index: 2;
-    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.5);
-  }
-
-  .site-collage-tile--lifestyle {
-    left: 23.8%;
-    top: 61.1%;
-    width: 76.2%;
-    height: 38.8%;
-    z-index: 3;
+@media (max-width: 720px) {
+  .site-index-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
 }
 
-.site-collage-tile {
+/* --- mosaico con parallax del Club ---
+   Dos columnas desfasadas; cada foto se desplaza a distinta velocidad al
+   hacer scroll, así el conjunto respira en vez de moverse en bloque. */
+.site-mosaic {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(18px, 2.2vw, 44px);
+  align-items: start;
+  margin-top: clamp(44px, 4.5vw, 96px);
+}
+
+.site-mosaic-col {
+  display: grid;
+  gap: clamp(22px, 2.8vw, 60px);
+}
+
+/* la columna derecha arranca más abajo: rompe la simetría */
+.site-mosaic-col--offset {
+  margin-top: clamp(40px, 7vw, 150px);
+}
+
+.site-mosaic figure {
+  margin: 0;
   overflow: hidden;
+  background: #0a0909;
 }
 
-.site-collage-tile img {
+.site-mosaic img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-@media (max-width: 900px) {
-  .site-collage {
-    display: flex;
-    flex-direction: column;
+.site-fig--locker {
+  aspect-ratio: 4 / 5;
+}
+
+.site-fig--glove {
+  aspect-ratio: 16 / 10;
+}
+
+.site-fig--bay {
+  aspect-ratio: 16 / 9;
+}
+
+.site-fig--exec {
+  aspect-ratio: 3 / 4;
+}
+
+@media (max-width: 720px) {
+  .site-mosaic {
+    grid-template-columns: 1fr;
     gap: 18px;
   }
 
-  .site-collage-tile {
-    aspect-ratio: 4 / 3;
+  .site-mosaic-col {
+    gap: 18px;
   }
 
-  .site-collage-tile--cuadro {
-    aspect-ratio: 3 / 4;
-    width: 78%;
-    align-self: center;
+  .site-mosaic-col--offset {
+    margin-top: 0;
   }
 }
 
-/* --- el club: formulario --- */
-.site-club-logo {
-  width: clamp(240px, 24vw, 460px);
-  height: auto;
-  margin-inline: auto;
-  display: block;
+/* --- precios de la bahía --- */
+.site-prices {
+  max-width: 620px;
+  margin: clamp(34px, 3.4vw, 60px) auto 0;
+  text-align: left;
+}
+
+.site-prices-title {
+  font-family: var(--font-formata), sans-serif;
+  font-size: clamp(11px, 0.8vw, 15px);
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 251, 0.72);
+  margin: 0 0 6px;
+  text-align: center;
+}
+
+.site-price-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  padding: clamp(15px, 1.5vw, 22px) 0;
+  border-bottom: 1px solid rgba(255, 255, 251, 0.2);
+}
+
+.site-price-row dt {
+  font-family: var(--font-formata), sans-serif;
+  font-size: clamp(12px, 0.85vw, 16px);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ec-text);
+  margin: 0;
+}
+
+.site-price-row dd {
+  font-weight: 200;
+  font-size: clamp(19px, 1.5vw, 28px);
+  letter-spacing: 0.02em;
+  color: var(--ec-text);
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* la fila de socios es el gancho: destacada y sin borde inferior */
+.site-price-row--socios {
+  border-bottom: 0;
+  padding-bottom: clamp(6px, 0.8vw, 12px);
+}
+
+.site-price-row--socios dd {
+  color: var(--ec-gold-b);
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: clamp(17px, 1.3vw, 24px);
+}
+
+.site-price-note {
+  font-weight: 300;
+  font-size: clamp(12.5px, 0.75vw, 14px);
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 251, 0.62);
+  margin: 4px 0 0;
+}
+
+/* botón secundario sobre el bloque oliva */
+.site-btn--ghost {
+  background: none;
+  border: 1px solid rgba(255, 255, 251, 0.55);
+  color: var(--ec-text);
+}
+
+.site-btn--ghost:hover:not(:disabled) {
+  background: rgba(255, 255, 251, 0.1);
+  border-color: var(--ec-text);
+}
+
+.site-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  margin-top: clamp(30px, 3vw, 52px);
+}
+
+@media (max-width: 720px) {
+  .site-plan {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    text-align: center;
+  }
+
+  .site-plan-desc {
+    border-left: 0;
+    border-top: 1px solid rgba(201, 150, 57, 0.3);
+    padding-left: 0;
+    padding-top: 22px;
+    text-align: left;
+  }
+}
+
+@media (max-width: 720px) {
+  .site-benefits--brief {
+    grid-template-columns: 1fr;
+  }
 }
 
 .site-form {
@@ -763,7 +714,7 @@
 
 .site-eventos-img {
   position: relative;
-  aspect-ratio: 1580 / 860;
+  aspect-ratio: 21 / 8;
   overflow: hidden;
 }
 
@@ -780,18 +731,6 @@
 }
 
 /* --- ubicación --- */
-.site-ubi-cards .site-card h3 {
-  color: var(--ec-text);
-}
-
-.site-ubi-cards .site-card p {
-  color: rgba(255, 255, 251, 0.82);
-}
-
-.site-ubi-cards .site-card-img {
-  aspect-ratio: 518 / 300;
-}
-
 .site-hairline {
   border: 0;
   border-top: 1px solid rgba(255, 255, 251, 0.22);
@@ -829,19 +768,6 @@
 
 .site-info a:hover {
   color: var(--ec-gold-b);
-}
-
-.site-mapa {
-  display: block;
-  position: relative;
-  aspect-ratio: 1580 / 860;
-  overflow: hidden;
-}
-
-.site-mapa img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 /* --- footer --- */
@@ -926,8 +852,5 @@
     transition: none;
   }
 
-  .site-trio-zoom,
-  .site-card-img img {
-    transition: none;
-  }
+
 }

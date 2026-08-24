@@ -4,11 +4,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import isotipo from "@/public/media/site/isotipo.png";
 
+// El orden del menú es el orden de la página.
 const LINKS = [
-  { href: "#mirada", label: "Nuestra mirada" },
-  { href: "#practica", label: "La práctica" },
-  { href: "#club", label: "El club" },
-  { href: "#eventos", label: "Eventos" },
+  { href: "#club", label: "Club" },
+  { href: "#reservar", label: "Reservar" },
   { href: "#ubicacion", label: "Ubicación" },
 ];
 
@@ -151,9 +150,6 @@ export default function SiteHeader() {
             {l.label}
           </a>
         ))}
-        <a href="/demo" onClick={close}>
-          Reservar
-        </a>
       </div>
     </>
   );
