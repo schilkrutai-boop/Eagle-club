@@ -488,6 +488,10 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transform-origin: center;
+  /* la imagen nace levemente escalada: el parallax la mueve dentro del marco
+     sin que nunca asome un borde. El JS ajusta el scale exacto. */
+  transform: scale(1.14);
 }
 
 .site-fig--locker {

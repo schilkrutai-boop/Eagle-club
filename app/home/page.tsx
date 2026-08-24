@@ -80,7 +80,7 @@ export default function HomePage() {
         <div className="site-wrap">
           <div className="site-mosaic">
             <div className="site-mosaic-col">
-              <Parallax speed={0.05}>
+              <Parallax speed={0.06}>
                 <Reveal>
                   <figure className="site-fig--locker">
                     <Image
@@ -92,7 +92,7 @@ export default function HomePage() {
                   </figure>
                 </Reveal>
               </Parallax>
-              <Parallax speed={0.1}>
+              <Parallax speed={0.15}>
                 <Reveal delay={120}>
                   <figure className="site-fig--glove">
                     <Image
@@ -107,7 +107,7 @@ export default function HomePage() {
             </div>
 
             <div className="site-mosaic-col site-mosaic-col--offset">
-              <Parallax speed={0.12}>
+              <Parallax speed={0.17}>
                 <Reveal delay={80}>
                   <figure className="site-fig--bay">
                     <Image
@@ -119,7 +119,7 @@ export default function HomePage() {
                   </figure>
                 </Reveal>
               </Parallax>
-              <Parallax speed={0.03}>
+              <Parallax speed={0.04}>
                 <Reveal delay={200}>
                   <figure className="site-fig--exec">
                     <Image
