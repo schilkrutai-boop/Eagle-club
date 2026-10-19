@@ -293,18 +293,10 @@
   margin-top: 0;
 }
 
-/* Al bajar el encabezado se reduce al logotipo: menú y CTA se ocultan y
-   queda solo el isotipo. */
-.site-header.is-compact .site-menu-btn,
-.site-header.is-compact .site-header-cta {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
+/* Al bajar, Menú y Reservar siguen en el encabezado junto al isotipo. */
 .site-menu-btn,
 .site-header-cta {
-  transition: color 0.25s ease, opacity 0.35s ease, visibility 0.35s ease;
+  transition: color 0.25s ease;
 }
 
 /* menú overlay */

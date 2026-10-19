@@ -16,8 +16,8 @@ const LINKS = [
 
 /**
  * Header fijo de la maqueta: MENÚ · logo · RESERVAR.
- * Parte con isotipo + wordmark; al hacer scroll queda solo el isotipo
- * (nota del diseñador, como la referencia de Rolls-Royce).
+ * Parte con isotipo + wordmark; al hacer scroll se va el wordmark y quedan
+ * MENÚ · isotipo · RESERVAR.
  */
 export default function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
