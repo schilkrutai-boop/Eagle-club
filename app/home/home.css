@@ -154,6 +154,29 @@
   inset: 0 0 auto 0;
   z-index: 60;
   transition: background 0.45s ease;
+  /* cuánto baja el degradé por debajo del encabezado */
+  --velo-fade: clamp(28px, 3.4vw, 64px);
+}
+
+/* Velo: lo que sube por detrás del encabezado se desvanece y el isotipo se
+   lee siempre. Sólido detrás del encabezado y en degradé hacia abajo. Toma
+   el color de la sección que pasa por debajo y se corta en el borde exacto
+   entre secciones (SiteHeader calcula --velo-a, --velo-b y --velo-corte), así
+   que no se ve como franja; sobre el video del hero es transparente. */
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: -1;
+  height: calc(100% + var(--velo-fade));
+  background: linear-gradient(
+    to bottom,
+    var(--velo-a, transparent) var(--velo-corte, 100%),
+    var(--velo-b, transparent) var(--velo-corte, 100%)
+  );
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--velo-fade)), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - var(--velo-fade)), transparent);
+  pointer-events: none;
 }
 
 .site-header::after {

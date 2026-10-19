@@ -23,6 +23,7 @@ export default function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [compact, setCompact] = useState(false);
   const [open, setOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const menuBtnRef = useRef<HTMLButtonElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
@@ -30,18 +31,51 @@ export default function SiteHeader() {
 
   useEffect(() => {
     let raf = 0;
+
+    // Velo bajo el encabezado: lleva el color de la sección que pasa por
+    // debajo y se corta justo en el borde con la siguiente, así lo que sube
+    // detrás del logo se desvanece sin que se vea una franja de otro color.
+    // Sobre el video del hero es transparente.
+    const site = headerRef.current?.closest(".site");
+    const fondoSite = site ? getComputedStyle(site).backgroundColor : "transparent";
+    const secciones = site
+      ? [...site.querySelectorAll<HTMLElement>(":scope > section, :scope > footer")].map((el) => {
+          const bg = getComputedStyle(el).backgroundColor;
+          const sinFondo = bg === "transparent" || bg === "rgba(0, 0, 0, 0)";
+          return {
+            el,
+            color: el.classList.contains("site-hero") ? "transparent" : sinFondo ? fondoSite : bg,
+          };
+        })
+      : [];
+    const pintarVelo = () => {
+      const h = headerRef.current;
+      if (!h) return;
+      for (let i = 0; i < secciones.length; i++) {
+        const fin = secciones[i].el.getBoundingClientRect().bottom;
+        if (fin <= 0) continue;
+        h.style.setProperty("--velo-a", secciones[i].color);
+        h.style.setProperty("--velo-b", (secciones[i + 1] ?? secciones[i]).color);
+        h.style.setProperty("--velo-corte", `${fin}px`);
+        return;
+      }
+    };
+
     const onScroll = () => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
         const y = window.scrollY;
         setScrolled(y > 24);
         setCompact(y > window.innerHeight * 0.55);
+        pintarVelo();
       });
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
     return () => {
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
       cancelAnimationFrame(raf);
     };
   }, []);
@@ -100,6 +134,7 @@ export default function SiteHeader() {
   return (
     <>
       <header
+        ref={headerRef}
         className={`site-header ${scrolled ? "is-scrolled" : ""} ${
           compact ? "is-compact" : ""
         }`}
