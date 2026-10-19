@@ -11,7 +11,7 @@ import trioExecutive from "@/public/media/site/trio-executive.jpg";
 import clubLocker from "@/public/media/site/club-locker.jpg";
 import clubGlove from "@/public/media/site/club-glove.jpg";
 import clubBay from "@/public/media/site/club-bay.jpg";
-import isotipoCream from "@/public/media/site/isotipo-cream.png";
+import logoFooter from "@/public/media/site/logo-footer.svg";
 
 // Página nueva según la maqueta de la agencia. Vive en /home para revisión
 // del equipo; la landing "próximamente" de / no se toca hasta el visto bueno.
@@ -228,12 +228,12 @@ export default function HomePage() {
       <footer className="site-section" style={{ paddingTop: 0 }}>
         <div className="site-wrap">
           <Reveal>
-            <div className="site-footer-lockup">
-              <span className="site-footer-word">Eagle</span>
-              <Image src={isotipoCream} alt="" />
-              <span className="site-footer-word">Club</span>
-            </div>
-            <p className="site-footer-tag">Indoor Golf</p>
+            {/* 02 · LOGO WEB FOOTER de la agencia: trae Estd. 2026, Stgo · Chile e Indoor Golf */}
+            <Image
+              src={logoFooter}
+              alt="Eagle Club — Indoor Golf"
+              className="site-footer-logo"
+            />
           </Reveal>
 
           <hr className="site-hairline" style={{ marginTop: "clamp(40px, 4vw, 76px)" }} />

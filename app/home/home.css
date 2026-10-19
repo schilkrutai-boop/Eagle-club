@@ -21,6 +21,10 @@
   font-weight: 300;
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
+  /* Contiene el margen del hero en el teléfono: sin esto se colapsaba hacia
+     afuera, la página bajaba 64 px y detrás del encabezado quedaba el fondo
+     crema del body, donde el logo, Menú y Reservar no se leían. */
+  display: flow-root;
 }
 
 .site ::selection {
@@ -160,12 +164,19 @@
   bottom: 0;
   height: 1px;
   background: rgba(255, 255, 251, 0.28);
+  transition: opacity 0.35s ease;
 }
 
 .site-header.is-scrolled {
   /* Totalmente transparente: el desenfoque dejaba un rectángulo visible al
      cruzar el borde entre secciones de distinto color. */
   background: transparent;
+}
+
+/* La línea solo acompaña al encabezado arriba del todo: al bajar se va
+   (cruzaba las secciones por encima del contenido). */
+.site-header.is-scrolled::after {
+  opacity: 0;
 }
 
 .site-header-inner {
@@ -220,41 +231,47 @@
   background: currentColor;
 }
 
-/* logo central: isotipo + wordmark; al hacer scroll queda solo el isotipo */
+/* logo central (01 · LOGO WEB HEADER de la agencia): isotipo sobre el
+   wordmark; al hacer scroll queda solo el isotipo. Las proporciones son las
+   del archivo: el isotipo mide el 23.53 % del ancho del wordmark y el aire
+   entre ambos, el 3.69 %. */
 .site-header-logo {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  /* el isotipo queda en clamp(30px, 2.4vw, 46px), como en la maqueta */
+  width: clamp(127.5px, 10.2vw, 195.5px);
   text-decoration: none;
-  color: var(--ec-text);
 }
 
-.site-header-logo img {
-  width: clamp(30px, 2.4vw, 46px);
+.site-header-isotipo {
+  width: 23.53%;
   height: auto;
-  transition: width 0.45s ease;
 }
 
 .site-header-wordmark {
-  font-family: var(--font-formata), sans-serif;
-  font-size: clamp(12px, 1.15vw, 22px);
-  letter-spacing: 0.42em;
-  text-indent: 0.42em;
-  text-transform: uppercase;
-  white-space: nowrap;
+  display: block;
+  width: 100%;
+  margin-top: 3.69%; /* % del ancho del logo */
   max-height: 30px;
   overflow: hidden;
-  transition: opacity 0.4s ease, max-height 0.45s ease;
+  transition: opacity 0.4s ease, max-height 0.45s ease, margin-top 0.45s ease;
+}
+
+.site-header-wordmark img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .site-header.is-compact .site-header-wordmark {
   opacity: 0;
   max-height: 0;
+  margin-top: 0;
 }
 
 /* Al bajar el encabezado se reduce al logotipo: menú y CTA se ocultan y
-   queda solo el isotipo sobre la línea. */
+   queda solo el isotipo. */
 .site-header.is-compact .site-menu-btn,
 .site-header.is-compact .site-header-cta {
   opacity: 0;
@@ -775,36 +792,20 @@
 }
 
 /* --- footer --- */
-.site-footer-lockup {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(14px, 1.6vw, 30px);
-  color: var(--ec-text);
-}
-
-.site-footer-lockup img {
-  width: clamp(34px, 2.9vw, 56px);
+/* 02 · LOGO WEB FOOTER de la agencia. Las letras grandes quedan del tamaño
+   que tenían EAGLE y CLUB en la maqueta; en el teléfono crece para que se
+   lea la letra chica (Estd. 2026, Stgo · Chile, Indoor Golf). */
+.site-footer-logo {
+  display: block;
+  width: clamp(260px, 22vw, 420px);
   height: auto;
+  margin-inline: auto;
 }
 
-.site-footer-word {
-  font-family: var(--font-formata), sans-serif;
-  font-size: clamp(17px, 1.5vw, 29px);
-  letter-spacing: 0.42em;
-  text-indent: 0.42em;
-  text-transform: uppercase;
-}
-
-.site-footer-tag {
-  font-family: var(--font-formata), sans-serif;
-  font-size: clamp(8px, 0.57vw, 11px);
-  letter-spacing: 0.5em;
-  text-indent: 0.5em;
-  text-transform: uppercase;
-  text-align: center;
-  color: var(--ec-red);
-  margin-top: 12px;
+@media (max-width: 720px) {
+  .site-footer-logo {
+    width: min(100%, 320px);
+  }
 }
 
 .site-footer-bar {

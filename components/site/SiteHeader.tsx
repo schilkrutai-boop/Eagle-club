@@ -2,7 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import isotipo from "@/public/media/site/isotipo.png";
+// Logo de la agencia (01 · LOGO WEB HEADER), separado en isotipo y wordmark
+// para poder ocultar el wordmark al hacer scroll.
+import isotipo from "@/public/media/site/logo-header-isotipo.svg";
+import wordmark from "@/public/media/site/logo-header-wordmark.svg";
 
 // El orden del menú es el orden de la página.
 const LINKS = [
@@ -119,8 +122,10 @@ export default function SiteHeader() {
           </button>
 
           <a href="#inicio" className="site-header-logo" aria-label="Eagle Club — inicio">
-            <Image src={isotipo} alt="" loading="eager" />
-            <span className="site-header-wordmark">Eagle Club</span>
+            <Image src={isotipo} alt="" loading="eager" className="site-header-isotipo" />
+            <span className="site-header-wordmark">
+              <Image src={wordmark} alt="" loading="eager" />
+            </span>
           </a>
 
           <a className="site-header-cta" href="/demo">
