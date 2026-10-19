@@ -155,14 +155,15 @@
   z-index: 60;
   transition: background 0.45s ease;
   /* cuánto baja el degradé por debajo del encabezado */
-  --velo-fade: clamp(28px, 3.4vw, 64px);
+  --velo-fade: clamp(48px, 6vw, 110px);
 }
 
-/* Velo: lo que sube por detrás del encabezado se desvanece y el isotipo se
-   lee siempre. Sólido detrás del encabezado y en degradé hacia abajo. Toma
-   el color de la sección que pasa por debajo y se corta en el borde exacto
-   entre secciones (SiteHeader calcula --velo-a, --velo-b y --velo-corte), así
-   que no se ve como franja; sobre el video del hero es transparente. */
+/* Velo: lo que sube por detrás del encabezado se apaga y el isotipo se lee.
+   Es una sombra suave, no una franja: nunca llega a ser sólido y se desvanece
+   con curva (sin el borde que deja un degradé lineal). Toma el color de la
+   sección que pasa por debajo y se corta en el borde exacto entre secciones
+   (SiteHeader calcula --velo-a, --velo-b y --velo-corte); sobre el video del
+   hero es transparente. */
 .site-header::before {
   content: "";
   position: absolute;
@@ -174,8 +175,19 @@
     var(--velo-a, transparent) var(--velo-corte, 100%),
     var(--velo-b, transparent) var(--velo-corte, 100%)
   );
-  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--velo-fade)), transparent);
-  mask-image: linear-gradient(to bottom, #000 calc(100% - var(--velo-fade)), transparent);
+  --velo-curva: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.86) 0%,
+    rgba(0, 0, 0, 0.8) 20%,
+    rgba(0, 0, 0, 0.66) 38%,
+    rgba(0, 0, 0, 0.47) 54%,
+    rgba(0, 0, 0, 0.28) 68%,
+    rgba(0, 0, 0, 0.13) 81%,
+    rgba(0, 0, 0, 0.04) 92%,
+    transparent 100%
+  );
+  -webkit-mask-image: var(--velo-curva);
+  mask-image: var(--velo-curva);
   pointer-events: none;
 }
 
